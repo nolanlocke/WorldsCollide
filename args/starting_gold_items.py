@@ -15,6 +15,9 @@ def parse(parser):
                                      help = "Start game with %(metavar)s Fenix Downs")
     starting_gold_items.add_argument("-sto", "--start-tools", default = 0, type = int, choices = range(9), metavar = "COUNT",
                                      help = "Start game with %(metavar)s different random tools")
+    starting_gold_items.add_argument("-seg", "--start-exp-eggs", default = 0, type = int, choices = range(4), metavar = "COUNT",
+                                     help = "Start game with %(metavar)s exp eggs")
+
 
 def process(args):
     pass
@@ -32,6 +35,8 @@ def flags(args):
         flags += f" -sfd {args.start_fenix_downs}"
     if args.start_tools != 0:
         flags += f" -sto {args.start_tools}"
+    if args.start_exp_eggs != 0:
+        flags += f" -seg {args.start_exp_eggs}"
 
     return flags
 
@@ -42,6 +47,7 @@ def options(args):
         ("Start Warp Stones", args.start_warp_stones),
         ("Start Fenix Downs", args.start_fenix_downs),
         ("Start Tools", args.start_tools),
+        ("Start Exp. Egg", args.start_exp_eggs)
     ]
 
 def menu(args):

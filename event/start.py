@@ -179,7 +179,11 @@ class Start(Event):
             src += [
                 field.AddItem("Fenix Down", sound_effect = False),
             ]
-
+        for fd in range(self.args.start_exp_eggs):
+            src += [
+                field.AddItem("Exp. Egg", sound_effect = False),
+            ]
+            
         tools = ["NoiseBlaster", "Bio Blaster", "Flash", "Chain Saw",
                  "Debilitator", "Drill", "Air Anchor", "AutoCrossbow"]
         start_tools = random.sample(tools, self.args.start_tools)
