@@ -14,6 +14,9 @@ class EnemyPacks():
     PACK2_SIZE = 4
 
     ZONE_EATER = 32
+    DOOM = 354
+    GODDESS = 355
+    POLTERGEIST = 356
     VELDT = 255 # placeholder for veldt in wob/wor
     PHUNBABA3 = 386
     DOOM_GAZE = 349
@@ -179,6 +182,15 @@ class EnemyPacks():
         exclude_bosses = None
         if no_phunbaba3 or not self.args.shuffle_random_phunbaba3:
             exclude_bosses = [self.formations.PHUNBABA3]
+
+        if not self.args.mix_bosses_statues:
+            if exclude_bosses is None:
+                exclude_bosses = [self.formations.DOOM, self.formations.GODDESS, self.formations.POLTERGEIST]
+            else:
+                exclude_bosses.append(self.formations.DOOM)
+                exclude_bosses.append(self.formations.GODDESS)
+                exclude_bosses.append(self.formations.POLTERGEIST)
+                
         if not self.args.doom_gaze_no_escape:
             if exclude_bosses is None:
                 exclude_bosses = [self.formations.DOOM_GAZE]

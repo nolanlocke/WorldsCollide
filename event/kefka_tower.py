@@ -35,9 +35,12 @@ class KefkaTower(Event):
             self.poltergeist_skip_fix()
 
         self.guardian_battle_mod()
-        self.doom_battle_mod()
-        self.goddess_battle_mod()
-        self.poltrgeist_battle_mod()
+
+        if not self.args.mix_bosses_statues: 
+            self.doom_battle_mod()
+            self.goddess_battle_mod()
+            self.poltrgeist_battle_mod()
+
         self.kefka_battle_mod()
 
         self.final_kefka_access_mod()

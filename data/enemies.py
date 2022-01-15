@@ -39,7 +39,7 @@ class Enemies():
             enemy = Enemy(enemy_index, self.enemy_data[enemy_index], self.enemy_name_data[enemy_index], self.enemy_item_data[enemy_index])
             self.enemies.append(enemy)
 
-            if enemy_index in bosses.enemy_name and enemy_index not in bosses.removed_enemy_name:
+            if (enemy_index in bosses.enemy_name and enemy_index not in bosses.removed_enemy_name) or (enemy_index in bosses.statue_enemy_name and self.args.mix_bosses_statues):
                 self.bosses.append(enemy)
 
         self.formations = EnemyFormations(self.rom, self.args, self)

@@ -11,6 +11,9 @@ class EnemyFormations():
     ENEMIES_END = 0xf83bf
     ENEMIES_SIZE = 15
 
+    DOOM = 468
+    GODDESS = 469
+    POLTERGEIST = 470
     PHUNBABA3 = 422
     DOOM_GAZE = 463
     PRESENTER = 433

@@ -76,9 +76,6 @@ normal_pack_name = {
     348 : "Wrexsoul",
     349 : "Doom Gaze",
     350 : "Hidon",
-    354 : "Doom",
-    355 : "Goddess",
-    356 : "Poltrgeist",
     359 : "Ultros 1",
     360 : "Ultros 2",
     363 : "Ultros/Chupon",
@@ -122,9 +119,6 @@ normal_formation_name = {
     462 : "Wrexsoul",
     463 : "Doom Gaze",
     464 : "Hidon",
-    468 : "Doom",
-    469 : "Goddess",
-    470 : "Poltrgeist",
     473 : "Ultros 1",
     474 : "Ultros 2",
     477 : "Ultros/Chupon",
@@ -184,9 +178,6 @@ normal_enemy_name = {
     352 : "Hidonite2",
     353 : "Hidonite3",
     354 : "Hidonite4",
-    295 : "Doom",
-    296 : "Goddess",
-    297 : "Poltrgeist",
     300 : "Ultros 1",
     301 : "Ultros 2",
     360 : "Ultros 4",
@@ -229,7 +220,25 @@ removed_enemy_name = {
     277 : "Tritoch (Terra)",
     371 : "Kefka (Thamasa)",
     362 : "Phunbaba 1",
-    363 : "Phunbaba 2",
+    363 : "Phunbaba 2",   
+}
+
+statue_pack_name = {
+    354 : "Doom",
+    355 : "Goddess",
+    356 : "Poltrgeist",
+}
+
+statue_formation_name = {
+    468 : "Doom",
+    469 : "Goddess",
+    470 : "Poltrgeist",
+}
+
+statue_enemy_name = {
+    295 : "Doom",
+    296 : "Goddess",
+    297 : "Poltrgeist",
 }
 
 pack_name = {}
@@ -237,6 +246,7 @@ pack_name.update(final_battle_pack_name)
 pack_name.update(dragon_pack_name)
 pack_name.update(normal_pack_name)
 pack_name.update(removed_pack_name)
+pack_name.update(statue_pack_name)
 
 name_pack = {v: k for k, v in pack_name.items()}
 
@@ -245,6 +255,7 @@ formation_name.update(final_battle_formation_name)
 formation_name.update(dragon_formation_name)
 formation_name.update(normal_formation_name)
 formation_name.update(removed_formation_name)
+formation_name.update(statue_formation_name)
 
 name_formation = {v: k for k, v in formation_name.items()}
 
@@ -253,5 +264,6 @@ enemy_name.update(final_battle_enemy_name)
 enemy_name.update(dragon_enemy_name)
 enemy_name.update(normal_enemy_name)
 enemy_name.update(removed_enemy_name)
+enemy_name.update(statue_enemy_name)
 
 name_enemy = {v: k for k, v in enemy_name.items()}
