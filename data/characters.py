@@ -118,6 +118,9 @@ class Characters():
         if self.args.equipable_umaro:
             characters_asm.equipable_umaro(self.CHARACTER_COUNT)
 
+        if (self.args.soft_level_cap):
+            characters_asm.soft_level_cap(self.args.soft_level_cap)
+
         self.mod_init_levels()
 
         if self.args.character_stat_random_percent:

@@ -7,6 +7,12 @@ def equipable_umaro(character_count):
 
     space = Reserve(0x39ef4, 0x39ef7, "Reequip Umaro if genji glove/gauntlet/merit award equipped/removed", asm.NOP())
 
+def soft_level_cap(level):
+    starting_exp_prog_addr = 0x2d8220 # exp ranges from 0x2d8220-0x2d82e3, 2 bytes to describ each elvel
+    starting_exp_addr = starting_exp_prog_addr + level * 2 - 1 # 2 bytes per level, subtract one otherwise cap leaks into the next level's byte
+
+    space = Reserve(starting_exp_addr, 0x2d82e3, "Exp progression data", 0xff)
+
 def update_morph_character(characters):
     from constants.commands import id_name
 
