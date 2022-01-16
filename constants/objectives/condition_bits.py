@@ -1,7 +1,7 @@
 import data.event_bit as event_bit
 import data.npc_bit as npc_bit
 import data.battle_bit as battle_bit
-from data.bosses import normal_formation_name, dragon_formation_name
+from data.bosses import normal_formation_name, dragon_formation_name, statue_formation_name
 
 from collections import namedtuple
 NameBit = namedtuple("NameBit", ["name", "bit"])
@@ -82,8 +82,11 @@ quest_bit = [
 ]
 
 boss_bit = []
-for formation_id in sorted(normal_formation_name, key = normal_formation_name.get):
-    boss_bit.append(NameBit(normal_formation_name[formation_id], battle_bit.boss_defeated(formation_id)))
+boss_names = {}
+boss_names.update(normal_formation_name)
+boss_names.update(statue_formation_name)
+for formation_id in sorted(boss_names, key = boss_names.get):
+    boss_bit.append(NameBit(boss_names[formation_id], battle_bit.boss_defeated(formation_id)))
 
 dragon_bit = []
 for formation_id in sorted(dragon_formation_name, key = dragon_formation_name.get):

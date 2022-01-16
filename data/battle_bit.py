@@ -9,8 +9,11 @@ DEFEATED_DOOM_GAZE = 0x48
 
 BOSS_DEFEATED_START = 0x68
 BOSS_DEFEATED_BITS = {}
-from data.bosses import normal_formation_name
-for index, formation in enumerate(normal_formation_name):
+from data.bosses import normal_formation_name, statue_formation_name
+boss_formation_name = {}
+boss_formation_name.update(normal_formation_name)
+boss_formation_name.update(statue_formation_name)
+for index, formation in enumerate(boss_formation_name):
     BOSS_DEFEATED_BITS[formation] = BOSS_DEFEATED_START + index
 
 DRAGON_DEFEATED_START = BOSS_DEFEATED_START + len(normal_formation_name)
