@@ -10,7 +10,7 @@ class AutoSprint:
     def mod(self):
         # set sprint by default, b button to walk, sprint shoes do nothing
 
-        WALK_SPEED = 2
+        WALK_SPEED = 4
         SPRINT_SPEED = 3
 
         CONTROLLER1_BYTE2 = 0x4219
