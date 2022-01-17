@@ -226,6 +226,8 @@ class Shops():
             exclude.append(self.items.get_id("Exp. Egg"))
         if self.args.shops_no_illuminas:
             exclude.append(self.items.get_id("Illumina"))
+        if self.args.scan_all:
+            exclude.append(self.items.SCAN_ROD)
 
         for shop in self.shops:
             for item in exclude:

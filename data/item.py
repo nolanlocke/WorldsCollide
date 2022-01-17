@@ -58,6 +58,7 @@ class Item():
         self.merit_awardable        = (data[2] & 0x80) >> 7
         self.learnable_spell_rate   = data[3]
         self.learnable_spell        = data[4]
+        self.castable_spell         = (data[18] & 0x3f)
         self.weapon_flag_unknown1   = (data[19] & 0x01) >> 0
         self.enable_swdtech         = (data[19] & 0x02) >> 1
         self.weapon_flag_unknown2   = (data[19] & 0x04) >> 2

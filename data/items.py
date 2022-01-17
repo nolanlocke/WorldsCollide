@@ -12,6 +12,9 @@ class Items():
 
     BREAKABLE_RODS = range(53, 59)
     ELEMENTAL_SHIELDS = range(96, 99)
+    
+    SCAN_ROD = 20 # replaces Crystal
+    SCAN_ROD_NAME = "Crystal"
 
     def __init__(self, rom, args, dialogs, characters):
         self.rom = rom
@@ -133,6 +136,22 @@ class Items():
                 item.enable_swdtech = 1
                 item.enable_runic = 1
 
+    def add_scan_rod(self):
+        from data.spell_names import name_id as spell_name_id
+        from data.text.text2 import value_text, text_value
+        
+        crystal = self.items[name_id["Crystal"]]
+        # make it an item, remove anything making it equippable
+        crystal.type = Item.ITEM
+        crystal.remove_all_equipable_characters()
+        crystal.can_be_thrown = 0
+        crystal.usable_in_battle = 1
+        crystal.usable_in_menu = 0
+        crystal.merit_awardable = 0
+        crystal.castable_spell = spell_name_id["Scan"] # now cast scan
+        crystal.name = "Scan Rod"
+        crystal.icon = value_text[text_value["<rod icon>"]]
+
     def prevent_atma_weapon_rage(self):
         # prevent atma weapon from being equipped by anyone with rage to avoid bug
         rage_characters = self.characters.get_characters_with_command("Rage")
@@ -191,6 +210,9 @@ class Items():
 
         if self.args.moogle_charm_all:
             self.moogle_charm_all()
+
+        if self.args.scan_all:
+            self.add_scan_rod()
 
         if self.args.swdtech_runic_all:
             self.swdtech_runic_all()

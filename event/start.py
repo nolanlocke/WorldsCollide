@@ -1,4 +1,5 @@
 from event.event import *
+from data.items import Items
 import random
 
 class Start(Event):
@@ -179,6 +180,12 @@ class Start(Event):
             src += [
                 field.AddItem("Fenix Down", sound_effect = False),
             ]
+
+        if self.args.scan_all:
+            for sr in range(99):
+                src += [
+                    field.AddItem(Items.SCAN_ROD_NAME, sound_effect = False)
+                ]
 
         tools = ["NoiseBlaster", "Bio Blaster", "Flash", "Chain Saw",
                  "Debilitator", "Drill", "Air Anchor", "AutoCrossbow"]
