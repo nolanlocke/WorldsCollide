@@ -17,7 +17,7 @@ def parse(parser):
                             help = "Remove character/esper rewards from: Auction House, Collapsing House, Figaro Castle Throne, Gau's Father's House, Kohlingen Inn, Narshe Weapon Shop, Sealed Gate, South Figaro Basement")
     challenges.add_argument("-pd", "--permadeath", action = "store_true",
                             help = "Life spells cannot be learned. Fenix Downs unavailable (except from starting items). Buckets/inns/tents/events do not revive characters. Phoenix casts Life 3 on party instead of Life")
-    challenges.add_argument("-slc", "--soft-level-cap", default = 99, type = int, choices = range(1, 99), metavar = "LEVEL",
+    challenges.add_argument("-slc", "--soft-level-cap", default = None, type = int, choices = range(1, 99), metavar = "LEVEL",
                             help = "Once hitting level %(metavar)s, increases the experience required to max possible value, significantly reducing leveling speed")
 
 def process(args):
