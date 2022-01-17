@@ -48,6 +48,7 @@ class Item():
         self.name = text.get_string(name_bytes[1:], text.TEXT2).rstrip('\0')
 
         data = self.rom.get_bytes(self.data_addr, self.DATA_SIZE)
+        self.init_data_byte         = data[0] # need this for later, there is other data here
         self.type                   = data[0] & 0x07
         self.throwable              = (data[0] & 0x10) >> 4
         self.usable_in_battle       = (data[0] & 0x20) >> 5
@@ -59,6 +60,8 @@ class Item():
         self.learnable_spell_rate   = data[3]
         self.learnable_spell        = data[4]
         self.castable_spell         = (data[18] & 0x3f)
+        self.allow_random_casting   = (data[18] & 0x40) >> 6
+        self.remove_from_inventory  = (data[18] & 0x80) >> 7
         self.weapon_flag_unknown1   = (data[19] & 0x01) >> 0
         self.enable_swdtech         = (data[19] & 0x02) >> 1
         self.weapon_flag_unknown2   = (data[19] & 0x04) >> 2
@@ -77,11 +80,22 @@ class Item():
 
         data = [0x00] * self.DATA_SIZE
 
+        data[0]     = self.init_data_byte 
+        data[0]    |= self.type 
+        data[0]    |= self.throwable                        << 4
+        data[0]    |= self.usable_in_battle                 << 5
+        data[0]    |= self.usable_in_menu                   << 6
+
         data[1]     = (self.equipable_characters & 0x00ff)
         data[2]     = (self.equipable_characters & 0x3f00)  >> 8
         data[2]    |= self.imp_equipment                    << 6
         data[2]    |= self.merit_awardable                  << 7
 
+
+        data[18]    = self.castable_spell
+        data[18]   |= self.allow_random_casting << 6
+        data[18]   |= self.remove_from_inventory << 7
+        
         data[19]    = self.weapon_flag_unknown1             << 0
         data[19]   |= self.enable_swdtech                   << 1
         data[19]   |= self.weapon_flag_unknown2             << 2
@@ -91,10 +105,12 @@ class Item():
         data[19]   |= self.allow_two_hands                  << 6
         data[19]   |= self.enable_runic                     << 7
 
+        self.rom.set_byte(self.data_addr, data[0])
         self.rom.set_byte(self.data_addr + 1, data[1])
         self.rom.set_byte(self.data_addr + 2, data[2])
         self.rom.set_byte(self.data_addr + 3, self.learnable_spell_rate)
         self.rom.set_byte(self.data_addr + 4, self.learnable_spell)
+        self.rom.set_byte(self.data_addr + 18, data[18])
         self.rom.set_byte(self.data_addr + 19, data[19])
         self.rom.set_short(self.data_addr + 28, self.price)
 

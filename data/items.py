@@ -148,7 +148,7 @@ class Items():
         crystal.usable_in_battle = 1
         crystal.usable_in_menu = 0
         crystal.merit_awardable = 0
-        crystal.castable_spell = spell_name_id["Scan"] # now cast scan
+        crystal.castable_spell = spell_name_id["Scan"] # now cast scan, and removes from inventory
         crystal.name = "Scan Rod"
         crystal.icon = value_text[text_value["<rod icon>"]]
 
