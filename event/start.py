@@ -18,9 +18,9 @@ class Start(Event):
         gogo_umaro = [self.characters.GOGO, self.characters.UMARO]
         for index, start_char in enumerate(self.args.start_chars):
             if start_char == "random":
-                party[index] = self.characters.get_random_available()
+                party[index] = self.characters.get_random_available(exclude = self.args.exclude_starting_chars)
             elif start_char == "randomngu":
-                party[index] = self.characters.get_random_available(exclude = gogo_umaro)
+                party[index] = self.characters.get_random_available(exclude = gogo_umaro + self.args.exclude_starting_chars)
 
         # assign chosen character rewards
         for character_id in party:

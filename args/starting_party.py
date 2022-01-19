@@ -1,3 +1,5 @@
+from data.characters import Characters
+
 def name():
     return "Starting Party"
 
@@ -17,6 +19,8 @@ def parse(parser):
                                 help = "Starting party member")
     starting_party.add_argument("-sc4", "--start-char4", default = "", type = str.lower, choices = character_options,
                                 help = "Starting party member")
+    starting_party.add_argument("-scex", "--start-char-exclude-random", default = "", type = str.lower,
+                                help = "Characters to exclude when selecting random starting party members")
 
 def process(args):
     # convert arguments to list of starting party
@@ -29,6 +33,17 @@ def process(args):
         args.start_chars.append(args.start_char3)
     if args.start_char4:
         args.start_chars.append(args.start_char4)
+
+    if args.start_char_exclude_random == "" or args.start_char_exclude_random is None:
+        args.exclude_starting_chars = []
+    else:
+        digits = 2 # number of digits each char id substring is
+        exclude_starting_char_ids = [int(args.start_char_exclude_random[index : index + digits]) for index in range(0, len(args.start_char_exclude_random), digits)]
+        args.exclude_starting_chars = [Characters.DEFAULT_NAME.index(Characters.DEFAULT_NAME[id]) for id in exclude_starting_char_ids]
+
+    # if there are more characters needed to be random than on our exclude list, throw error
+    if len([char for char in args.start_chars if char == "random" or char == "randomngu"]) > len(Characters.DEFAULT_NAME) - len(args.exclude_starting_chars):
+        raise ValueError("The number of excluded starting characters exceeds the number of available characters. Exclude less characters")
 
     if not args.start_chars:
         # no starting characters specified, pick one random starting character
@@ -52,6 +67,9 @@ def flags(args):
         flags += f" -sc3 {args.start_char3}"
     if args.start_char4:
         flags += f" -sc4 {args.start_char4}"
+
+    if args.start_char_exclude_random:
+        flags += " scex {args.start_char_exclude_random}"
 
     return flags
 
