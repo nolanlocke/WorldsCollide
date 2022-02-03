@@ -1,5 +1,5 @@
 # NOTE: (address - 1e80) * 0x8 + bit
-# e.g. (1eb7 - 1e80) * 0x8 + 0x1 = 1b9 (airship visible) 
+# e.g. (1eb7 - 1e80) * 0x8 + 0x1 = 1b9 (airship visible)
 #      (1f43 - 1e80) * 0x8 + 0x3 = 61b (characters on narshe battlefield)
 
 DISABLE_SAVE_POINT_TUTORIAL = 0x133
@@ -211,8 +211,11 @@ def byte(event_bit):
 def bit(event_bit):
     return event_bit % 8
 
+def base_address():
+    return 0x1e80
+
 def address(event_bit):
-    return 0x1e80 + byte(event_bit)
+    return base_address() + byte(event_bit)
 
 def character_recruited(char):
     # char in shops, items, gogo menu

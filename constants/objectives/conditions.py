@@ -5,6 +5,9 @@ from constants.espers import id_esper
 from collections import namedtuple
 ConditionType = namedtuple("ConditionType", ["name", "string_function", "value_range", "min_max"])
 
+from enum import Enum
+ObjectiveConditionType = Enum("ConditionType", "EventWord EventBit BattleBit Character Esper")
+
 types = [
     ConditionType("None", "", None, False),
     ConditionType("Random", "Random", ["r"], False),

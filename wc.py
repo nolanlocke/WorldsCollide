@@ -1,3 +1,7 @@
+import debugpy
+
+from metadata.objective_metadata_writer import ObjectiveMetadataWriter
+
 def main():
     import args
     import log
@@ -22,6 +26,8 @@ def main():
 
     from bug_fixes import BugFixes
     bug_fixes = BugFixes()
+
+    metadata_writer = ObjectiveMetadataWriter(memory.rom, args).write()
 
     data.write()
     memory.write()

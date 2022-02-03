@@ -31,8 +31,11 @@ def byte(battle_bit):
 def bit(battle_bit):
     return battle_bit % 8
 
+def base_address():
+    return 0x1dc9
+
 def address(battle_bit):
-    return 0x1dc9 + byte(battle_bit)
+    return base_address() + byte(battle_bit)
 
 def battle_address(battle_bit):
     # sram battle bits copied at battle start and updated at battle end

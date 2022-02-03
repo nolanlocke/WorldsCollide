@@ -2,18 +2,18 @@ import objectives.conditions._field_condition as field_condition
 import objectives.conditions._battle_condition as battle_condition
 import objectives.conditions._menu_condition as menu_condition
 
-from constants.objectives.conditions import name_type
+from constants.objectives.conditions import name_type, ObjectiveConditionType
 
 import data.event_bit as event_bit
 import data.battle_bit as battle_bit
 import data.event_word as event_word
 
-from enum import Enum
-ConditionType = Enum("ConditionType", "EventWord EventBit BattleBit Character Esper")
-
+ConditionType = ObjectiveConditionType
 class ObjectiveCondition:
     def __init__(self, condition_type, *args):
         self.args = args
+
+        self.condition_type = condition_type
 
         self.field_class = getattr(field_condition, condition_type.name + "Condition")
         self.battle_class = getattr(battle_condition, condition_type.name + "Condition")
@@ -43,3 +43,7 @@ class ObjectiveCondition:
 
     def __str__(self, *args):
         return name_type[self.NAME].string_function(*args)
+
+    def base_address(self):
+        # TODO: abstract out where we store the base address?
+        return self.battle_class.base_address()
