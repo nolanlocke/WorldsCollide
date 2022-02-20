@@ -5,7 +5,7 @@ class LeteRiver(Event):
         return "Lete River"
 
     def character_gate(self):
-        return self.characters.TERRA
+        return self.characters.LOCKE
 
     def init_rewards(self):
         self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
@@ -21,7 +21,7 @@ class LeteRiver(Event):
     def mod(self):
         self.raft_npc_id = 0x11
 
-        if self.args.character_gating:
+        if self.is_gated():
             self.add_gating_condition()
 
         if not self.args.fixed_encounters_original:
@@ -77,7 +77,7 @@ class LeteRiver(Event):
 
     def before_ultros_mod(self):
         space = Reserve(0xb05a5, 0xb05e3, "lete river heal party, here we go", field.NOP())
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 field.ReturnIfEventBitClear(event_bit.character_recruited(self.character_gate())),
             )

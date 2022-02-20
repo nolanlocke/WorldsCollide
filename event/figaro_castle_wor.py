@@ -11,7 +11,7 @@ class FigaroCastleWOR(Event):
         self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
     def init_event_bits(self, space):
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 field.SetEventBit(npc_bit.SIEGFRIED_FIGARO_CAVE_ENTRANCE),
             )
@@ -32,7 +32,7 @@ class FigaroCastleWOR(Event):
         self.gerad_engine_room_npc_id = 0x1a
         self.gerad_engine_room_npc = self.maps.get_npc(0x040, self.gerad_engine_room_npc_id)
 
-        if self.args.character_gating:
+        if self.is_gated():
             self.add_gating_condition()
 
         self.figaro_cave_mod()

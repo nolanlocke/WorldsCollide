@@ -201,7 +201,7 @@ class OperaHouseWOB(Event):
         space = Reserve(0xab744, 0xab75f, "opera house impressario What!!!?", field.NOP())
         space.add_label("IS_EVERYTHING_OK?", 0xab740)
         space.add_label("START_EVENT", 0xab95f)
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 field.BranchIfEventBitClear(event_bit.character_recruited(self.character_gate()), "IS_EVERYTHING_OK?"),
             )
@@ -298,7 +298,7 @@ class OperaHouseWOB(Event):
         space.write(
             field.Call(show_celes),
         )
-       
+
         # do not animate the now hidden party leader
         space = Reserve(0xac28a, 0xac28d, "opera house do not turn party leader up", field.NOP())
         space = Reserve(0xac30d, 0xac312, "opera house do not move party leader up", field.NOP())

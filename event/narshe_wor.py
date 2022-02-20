@@ -24,7 +24,7 @@ class NarsheWOR(Event):
         self.pickpocket_mod()
 
         self.locke_unlock_doors_mod()
-        if self.args.character_gating:
+        if self.is_gated():
             self.add_gating_condition()
         else:
             # allow doors to be unlocked without any condition

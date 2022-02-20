@@ -38,6 +38,13 @@ class Event():
     def character_gate(self):
         return None
 
+    def is_gated(self):
+        char = self.character_gate()
+        if char is None:
+            return False
+        else:
+            return self.args.character_gating and [x.name for x in self.characters.characters]
+
     def characters_required(self):
         return 1
 

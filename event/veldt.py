@@ -222,7 +222,7 @@ class Veldt(Event):
             asm.TRB(0x11e4, asm.ABS),   # test and mark gau as not available to return from leap
             asm.BEQ("SKIP_GAU_EVENT"),  # branch if true gau/char can not return from leap
         )
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 branch_if_char_not_recruited(self.character_gate(), "SKIP_GAU_EVENT"),
             )

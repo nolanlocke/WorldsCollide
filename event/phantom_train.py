@@ -32,7 +32,7 @@ class PhantomTrain(Event):
         self.phantom_train_mod()
         self.random_forest_mod()
 
-        if self.args.character_gating:
+        if self.is_gated():
             self.add_gating_condition()
 
         if self.reward.type == RewardType.CHARACTER:

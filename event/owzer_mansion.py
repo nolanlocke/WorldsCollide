@@ -16,7 +16,7 @@ class OwzerMansion(Event):
 
         self.dialog_mod()
 
-        if self.args.character_gating:
+        if self.is_gated():
             self.add_gating_condition()
 
         if not self.args.fixed_encounters_original:

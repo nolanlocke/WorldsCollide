@@ -53,7 +53,7 @@ class SouthFigaro(Event):
                 field_entity.AnimateKneeling(),
             ),
         )
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 field.ReturnIfEventBitSet(event_bit.character_recruited(self.character_gate())),
                 field.HideEntity(self.celes_npc_id),

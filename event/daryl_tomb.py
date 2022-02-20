@@ -26,7 +26,7 @@ class DarylTomb(Event):
         self.log_reward(self.reward)
 
     def entrance_mod(self):
-        if self.args.character_gating:
+        if self.is_gated():
             space = Reserve(0xa3f91, 0xa3f97, "daryl tomb require setzer in party", field.NOP())
             space.write(
                 field.ReturnIfEventBitClear(event_bit.character_recruited(self.character_gate())),

@@ -70,7 +70,7 @@ class MagitekFactory(Event):
         space.write(
             field.HideEntity(sympathizer_npc_id),
         )
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 field.BranchIfEventBitClear(event_bit.character_recruited(self.character_gate()), "NPC_QUEUES"),
             )

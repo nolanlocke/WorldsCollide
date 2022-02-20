@@ -45,7 +45,7 @@ class GauFatherHouse(Event):
         space.write(
             field.BranchIfEventBitClear(npc_bit.SHADOW_GAU_FATHER_HOUSE, "NO_SHADOW"),
         )
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 field.BranchIfEventBitClear(event_bit.character_recruited(self.character_gate()), "NO_SHADOW"),
             )

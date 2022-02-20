@@ -27,7 +27,7 @@ class BurningHouse(Event):
         )
 
     def mod(self):
-        if self.args.character_gating:
+        if self.is_gated():
             self.add_gating_condition()
 
         self.enter_burning_house_mod()

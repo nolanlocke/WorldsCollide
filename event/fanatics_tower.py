@@ -47,7 +47,7 @@ class FanaticsTower(Event):
             field.ReturnIfEventBitClear(event_bit.DEFEATED_MAGIMASTER),
             field.ReturnIfEventBitSet(event_bit.RECRUITED_STRAGO_FANATICS_TOWER),
         )
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 field.ReturnIfEventBitClear(event_bit.character_recruited(self.character_gate())),
             )
@@ -69,7 +69,7 @@ class FanaticsTower(Event):
             field.ReturnIfEventBitClear(event_bit.DEFEATED_MAGIMASTER),
             field.ReturnIfEventBitSet(event_bit.RECRUITED_STRAGO_FANATICS_TOWER),
         )
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 field.ReturnIfEventBitClear(event_bit.character_recruited(self.character_gate())),
             )

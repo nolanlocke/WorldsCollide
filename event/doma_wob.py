@@ -104,7 +104,7 @@ class DomaWOB(Event):
             world.BranchIfEventBitSet(event_bit.FINISHED_DOMA_WOB, load_doma_function),
         )
 
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 world.BranchIfEventBitClear(event_bit.character_recruited(self.character_gate()), load_doma_function),
             )

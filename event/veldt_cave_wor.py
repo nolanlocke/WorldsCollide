@@ -19,7 +19,7 @@ class VeldtCaveWOR(Event):
 
         self.dialog_mod()
 
-        if self.args.character_gating:
+        if self.is_gated():
             self.add_gating_condition()
 
         self.srbehemoth_battle_mod()

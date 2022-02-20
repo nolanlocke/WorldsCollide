@@ -68,7 +68,13 @@ class Checks(scroll_area.ScrollArea):
                 character_address = constant_ffff   # always 0xffff
                 character_bit = 0x01                # any bit
             else:
-                character_id = Characters.DEFAULT_NAME.index(character.upper())
+                # not sure better place to put this..
+                if character.upper() == "BANON":
+                    character_id = 1 # args.banon_id
+                elif character.upper() == "LEO":
+                    character_id = 3 # jargs.leo_id
+                else:
+                    character_id = Characters.DEFAULT_POOL.index(character.upper())
                 character_event_bit = event_bit.character_recruited(character_id)
                 character_address = event_bit.address(character_event_bit)
                 character_bit = event_bit.bit(character_event_bit)

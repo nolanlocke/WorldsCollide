@@ -64,7 +64,7 @@ class DomaWOR(Event):
             field.BranchIfEventBitClear(event_bit.IN_WOR, NORMAL_SLEEP_ADDR),
             field.BranchIfEventBitSet(event_bit.FINISHED_DOMA_WOR, NORMAL_SLEEP_ADDR),
         )
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 field.BranchIfEventBitClear(event_bit.character_recruited(self.character_gate()), NORMAL_SLEEP_ADDR),
             )

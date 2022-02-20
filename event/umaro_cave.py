@@ -21,7 +21,7 @@ class UmaroCave(Event):
         self.umaro_wob_npc_id = 0x11
         self.umaro_wob_npc = self.maps.get_npc(0x015, self.umaro_wob_npc_id)
 
-        if self.args.character_gating:
+        if self.is_gated():
             self.add_gating_condition()
 
         self.umaro_battle_mod()

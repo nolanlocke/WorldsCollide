@@ -15,7 +15,7 @@ class EsperMountain(Event):
             field.SetEventBit(event_bit.ESPER_MOUNTAIN_ACCESSIBLE),
             field.SetEventBit(event_bit.FOUND_ESPERS_ESPER_MOUNTAIN),
         )
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 field.SetEventBit(event_bit.ESPER_MOUNTAIN_GATED),
             )
@@ -56,7 +56,7 @@ class EsperMountain(Event):
         src = [
             Read(0xbf2a2, 0xbf2b3), # copy old entrance event
         ]
-        if self.args.character_gating:
+        if self.is_gated():
             src += [
                 field.ReturnIfEventBitSet(event_bit.DEFEATED_ULTROS_ESPER_MOUNTAIN),
                 field.ReturnIfEventBitClear(event_bit.character_recruited(self.character_gate())),

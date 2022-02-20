@@ -25,7 +25,13 @@ def show_original_names():
     space = Allocate(Bank.C3, 190, "characters show original names")
     original_names_table = space.next_address
     for index in range(Characters.CHARACTER_COUNT):
-        name = Characters.DEFAULT_NAME[index]
+        # TODO: Read args here
+        if index == 1: # if index == args.banon_id
+            name = "BANON"
+        elif index == 3: # if index == args.leo_id
+            name = "LEO"
+        else:
+            name = Characters.DEFAULT_NAME[index]
 
         values = text.get_bytes(name, text.TEXT3)
         values.extend([0xFF] * (Characters.NAME_SIZE - len(values))) # pad ending with ' '

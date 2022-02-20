@@ -54,7 +54,7 @@ class ImperialCamp(Event):
         # this does not get called anymore, use it for extra wob event tile space
         # TODO what does the unknown flag here in load map do?
         space = Reserve(0xb0bbd, 0xb0bea, "imperial camp load after doma wob scene", world.End())
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 world.EndIfEventBitClear(event_bit.character_recruited(self.character_gate())),
             )

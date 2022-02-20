@@ -59,7 +59,7 @@ class LoneWolf(Event):
         space = Reserve(0xcd608, 0xcd60a, "lone wolf Thankupo!", field.NOP())
 
     def chase_mod(self):
-        if self.args.character_gating:
+        if self.is_gated():
             space = Reserve(0xcd3d4, 0xcd3db, "lone wolf saw maduin die and not started lone wolf requirements")
             space.write(
                 field.ReturnIfAny([event_bit.character_recruited(self.character_gate()), False, event_bit.CHASING_LONE_WOLF1, True]),

@@ -14,7 +14,7 @@ class ZoneEater(Event):
         self.gogo_npc_id = 0x10
         self.gogo_npc = self.maps.get_npc(0x116, self.gogo_npc_id)
 
-        if self.args.character_gating:
+        if self.is_gated():
             self.add_gating_condition()
 
         if self.reward.type == RewardType.CHARACTER:

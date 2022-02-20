@@ -24,7 +24,7 @@ class FigaroCastleWOB(Event):
         self.edgar_npc_id = 0x10
         self.edgar_npc = self.maps.get_npc(0x03a, self.edgar_npc_id)
 
-        if self.args.character_gating:
+        if self.is_gated():
             self.add_gating_condition()
 
         self.guard_mod()

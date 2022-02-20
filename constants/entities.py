@@ -4,9 +4,9 @@ SOLDIER, IMP, GENERAL_LEO, BANON_DUNCAN, ESPER_TERRA, MERCHANT, GHOST, KEFKA = r
 
 id_character = {
     0   : "TERRA",
-    1   : "LOCKE",
+    1   : "BANON",
     2   : "CYAN",
-    3   : "SHADOW",
+    3   : "LEO",
     4   : "EDGAR",
     5   : "SABIN",
     6   : "CELES",

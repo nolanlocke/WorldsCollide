@@ -20,7 +20,7 @@ class CollapsingHouse(Event):
         self.timer_mod()
         self.dialogs_mod()
 
-        if self.args.character_gating:
+        if self.is_gated():
             self.add_gating_condition()
 
         if self.reward.type == RewardType.CHARACTER:

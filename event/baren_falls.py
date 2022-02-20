@@ -15,7 +15,7 @@ class BarenFalls(Event):
         for x in range(9, 18):
             self.maps.delete_event(0x9c, x, 12)
 
-        if self.args.character_gating:
+        if self.is_gated():
             self.add_gating_condition()
 
         self.rizopas_battle_mod()

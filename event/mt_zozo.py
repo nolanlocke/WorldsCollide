@@ -82,7 +82,7 @@ class MtZozo(Event):
             "IN_WOR",
             field.BranchIfEventBitSet(event_bit.GOT_RUST_RID, "MT_ZOZO_LOCATION_DIALOG"),
         )
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 field.BranchIfEventBitClear(event_bit.character_recruited(self.character_gate()), "MT_ZOZO_LOCATION_DIALOG"),
             )

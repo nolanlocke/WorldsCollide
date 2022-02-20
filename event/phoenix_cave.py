@@ -66,7 +66,7 @@ class PhoenixCave(Event):
         character_requirements_cancel_landing = space.start_address
 
         space = Reserve(0xa0405, 0xa0428, "phoenix cave landing checks", field.NOP())
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 field.BranchIfEventBitClear(event_bit.character_recruited(self.character_gate()), no_locke_cancel_landing),
             )

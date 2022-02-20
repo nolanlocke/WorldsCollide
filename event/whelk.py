@@ -38,7 +38,7 @@ class Whelk(Event):
         space = Reserve(0xc9f58, 0xc9f5a, "narshe mines whelk get them", field.NOP())
 
     def entrance_event_mod(self):
-        if self.args.character_gating:
+        if self.is_gated():
             # use the entrance event from the beginning mines map (where whelk originally is)
             space = Reserve(0xc9ef2, 0xc9ef7, "narshe mines entrance event gate check")
             space.write(

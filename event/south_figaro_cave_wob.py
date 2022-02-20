@@ -70,7 +70,7 @@ class SouthFigaroCaveWOB(Event):
         space.write(
             field.ReturnIfEventBitSet(event_bit.FIRST_NOISE_FIGARO_CAVE),
         )
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 field.ReturnIfEventBitClear(event_bit.character_recruited(self.character_gate())),
             )

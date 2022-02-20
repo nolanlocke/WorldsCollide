@@ -1,4 +1,8 @@
 character_checks = {
+    "Banon": [
+        "Lete River",
+        "Narshe Battle",
+    ],
     "Celes" : [
         "Magitek Factory Trash",
         "Magitek Factory Guard",
@@ -27,6 +31,7 @@ character_checks = {
     "Gogo" : [
         "Zone Eater",
     ],
+    "Leo": [],
     "Locke" : [
         "Narshe Weapon Shop",
         "Narshe Weapon Shop Mines",
@@ -85,7 +90,6 @@ character_checks = {
         "Kefka's Tower Cell Beast",
         "Kefka's Tower Dragon G",
         "Kefka's Tower Dragon S",
-        "Narshe Battle",
         "Narshe Dragon",
         "Opera House Dragon",
         "Tritoch Cliff",

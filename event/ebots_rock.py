@@ -50,7 +50,7 @@ class EbotsRock(Event):
         space = Reserve(0xb70eb, 0xb70ed, "ebots rock Skinflint! Git outta here!", field.NOP())
         space = Reserve(0xb7137, 0xb713f, "ebots rock I'm not happy unless I have plenty to eat!", field.Return())
 
-        if self.args.character_gating:
+        if self.is_gated():
             space = Reserve(0xb7141, 0xb7149, "ebots rock require hidon defeated or strago to pass chest", field.NOP())
             space.add_label("CHEST_STUFFED", 0xb714f)
             space.write(

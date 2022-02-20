@@ -7,6 +7,9 @@ class NarsheBattle(Event):
     def characters_required(self):
         return 2
 
+    def character_gate(self):
+        return self.characters.BANON
+
     def init_rewards(self):
         self.reward = self.add_reward(RewardType.CHARACTER | RewardType.ESPER | RewardType.ITEM)
 
@@ -55,8 +58,9 @@ class NarsheBattle(Event):
 
         # originally banon before battle shares same npc bit as rest of character lineup
         # to get banon to show up without the character lineup change the npc bit to
-        self.banon_before_battle_npc.event_byte = 0x65
-        self.banon_before_battle_npc.event_bit = 4
+        self.banon_before_battle_npc.event_address = 0x1edc
+        self.banon_before_battle_npc.event_byte = 0
+        self.banon_before_battle_npc.event_bit = 2
 
         # do not block path with banon before battle
         self.banon_before_battle_npc.x = 21

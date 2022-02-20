@@ -32,7 +32,7 @@ class Zozo(Event):
         self.ramuh_npc = self.maps.get_npc(0x0e2, self.ramuh_npc_id)
         self.ramuh_magicite_npc_id = 0x12
 
-        if self.args.character_gating:
+        if self.is_gated():
             self.add_gating_condition()
 
         self.dadaluma_battle_mod()

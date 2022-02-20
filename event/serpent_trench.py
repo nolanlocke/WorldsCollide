@@ -32,7 +32,7 @@ class SerpentTrench(Event):
 
     def find_diving_helmet_mod(self):
         space = Reserve(0xbc601, 0xbc607, "serpent trench cave require gau to find diving helmet", field.NOP())
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 field.ReturnIfEventBitClear(event_bit.character_recruited(self.character_gate())),
             )

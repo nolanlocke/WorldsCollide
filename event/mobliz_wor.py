@@ -38,7 +38,7 @@ class MoblizWOR(Event):
         self.terra_with_katarin_npc_id = 0x10
         self.terra_with_katarin_npc = self.maps.get_npc(0x096, self.terra_with_katarin_npc_id)
 
-        if self.args.character_gating:
+        if self.is_gated():
             self.add_gating_condition()
 
         self.dog_walking_mod()

@@ -17,7 +17,7 @@ class ImperialBase(Event):
         SOLDIERS_BATTLE_ON_TOUCH = 0xb25b9
 
         space = Reserve(0xb25d6, 0xb25f8, "imperial base entrance event conditions", field.NOP())
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 #field.BranchIfEventBitSet(event_bit.character_recruited(self.events["Sealed Gate"].character_gate()), SOLDIERS_BATTLE_ON_TOUCH),
                 field.ReturnIfEventBitSet(event_bit.character_recruited(self.events["Sealed Gate"].character_gate())),

@@ -50,7 +50,7 @@ class Kohlingen(Event):
         space.write(
             field.HideEntity(self.interceptor_npc_id),
         )
-        if self.args.character_gating:
+        if self.is_gated():
             space.write(
                 field.BranchIfEventBitSet(event_bit.character_recruited(self.character_gate()), "AFTER_HIDE_SHADOW"),
                 field.HideEntity(self.shadow_npc_id),
@@ -66,7 +66,7 @@ class Kohlingen(Event):
             Read(0xc69e8, 0xc69ed), # copy load kohlingen inn map
             field.HideEntity(self.interceptor_npc_id),
         ]
-        if self.args.character_gating:
+        if self.is_gated():
             src += [
                 field.BranchIfEventBitSet(event_bit.character_recruited(self.character_gate()), "AFTER_HIDE_SHADOW"),
                 field.HideEntity(self.shadow_npc_id),
