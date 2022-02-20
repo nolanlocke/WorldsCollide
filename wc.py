@@ -1,5 +1,4 @@
-def main():
-    import args
+def wc(args):
     import log
 
     from memory.memory import Memory
@@ -25,6 +24,22 @@ def main():
 
     data.write()
     memory.write()
+
+def main():
+    import args
+    is_coop = True
+    if is_coop:
+        orig_seed = args.seed
+        args.seed = f"{args.seed}-A"
+        args.character_seed = f"{orig_seed}-Character"
+        args.chest_seed = f"{orig_seed}-Chest"
+        args.monster_seed = f"{orig_seed}-Monster"
+        args.shop_seed = f"{orig_seed}-Shop"
+        wc(args)
+        args.seed = f"{args.seed}-B"
+        wc(args)
+    else:
+        wc(args)
 
 if __name__ == '__main__':
     main()
