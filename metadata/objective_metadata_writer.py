@@ -1,8 +1,9 @@
-from constants.objectives.conditions import ConditionType, ObjectiveConditionType
+from constants.objectives.conditions import ObjectiveConditionType
 from data.text.text1 import text_value
 from memory.rom import ROM
 from memory.space import Allocate, Bank
 from utils.flatten import flatten
+from objectives.conditions._objective_condition import ObjectiveCondition
 
 OBJECTIVE_BANK = "FF"
 NAME_BANK = "FE"
@@ -17,6 +18,9 @@ CONDITION_NAME_LENGTH = 31
 
 class ObjectiveMetadataWriter:
     def get_high_low_bytes(self, byte):
+        if byte < 0:
+            val = bytearray.fromhex(hex(~byte).lstrip('0x').rstrip('L').zfill(4))
+            return [val[0] | 8, val[1]]
         val = bytearray.fromhex(hex(byte).lstrip('0x').rstrip('L').zfill(4))
         return [val[0], val[1]]
 
@@ -43,7 +47,6 @@ class ObjectiveMetadataWriter:
         name_space = self.allocate_name(objective.result.__str__())
         # write down the result NAME (this is more or less an ID)
         type_name_space = self.allocate_name(objective.result.NAME)
-
 
         [name_ptr_high_byte, name_ptr_low_byte]= self.get_high_low_bytes(name_space.start_address - NAME_BANK_INT)
         [type_name_ptr_high_byte, type_name_ptr_low_byte]= self.get_high_low_bytes(type_name_space.start_address - NAME_BANK_INT)
@@ -77,7 +80,7 @@ class ObjectiveMetadataWriter:
 
         return [objective, objective_data]
 
-    def get_objective_condition_metadata(self, condition, index):
+    def get_objective_condition_metadata(self, condition: ObjectiveCondition, index):
         condition_data = []
         this_condition_data = []
         condition_type_value = condition.condition_type.value

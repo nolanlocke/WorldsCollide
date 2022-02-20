@@ -6,13 +6,13 @@ class Condition(ObjectiveCondition):
     def __init__(self, character):
         self.character = character
         self.value = character
-        super().__init__(ConditionType.Character, self.bit())
+        super().__init__(ConditionType.Character, self.character)
 
     def __str__(self):
         return super().__str__(self.character)
 
     def bit(self):
-        return self.character
+        return 0x2e0 + self.character
 
     def name(self):
         return id_name[self.character]
