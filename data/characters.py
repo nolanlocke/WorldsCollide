@@ -1,3 +1,4 @@
+from random import Random
 from data.character import Character
 from data.natural_magic import NaturalMagic
 from data.commands import Commands
@@ -8,6 +9,7 @@ from data.party_battle_scripts import PartyBattleScripts
 from data.structures import DataArray
 
 import data.characters_asm as characters_asm
+from seed import get_random_instance
 
 class Characters():
     CHARACTER_COUNT = 14   # 14 playable characters
@@ -28,6 +30,9 @@ class Characters():
         self.rom = rom
         self.args = args
 
+        self.stat_random: Random = get_random_instance(f"{args.character_seed}-stats")
+        self.char_random: Random = get_random_instance(f"{args.character_seed}-character")
+
         self.init_data = DataArray(self.rom, self.INIT_DATA_START, self.INIT_DATA_END, self.INIT_DATA_SIZE)
         self.name_data = DataArray(self.rom, self.NAMES_START, self.NAMES_END, self.NAME_SIZE)
 
@@ -39,7 +44,7 @@ class Characters():
         self.playable = self.characters[:self.CHARACTER_COUNT]
 
         self.natural_magic = NaturalMagic(self.rom, self.args, self, spells)
-        self.commands = Commands(self.characters)
+        self.commands = Commands(self.characters, self.args)
 
         self.menu_character_sprites = MenuCharacterSprites(self.rom, self.args)
         self.character_sprites = CharacterSprites(self.rom, self.args)
@@ -63,9 +68,8 @@ class Characters():
         if exclude is None:
             exclude = []
 
-        import random
         possible_characters = [character_id for character_id in self.available_characters if character_id not in exclude]
-        random_character = random.choice(possible_characters)
+        random_character = self.char_random.choice(possible_characters)
         self.set_unavailable(random_character)
         return random_character
 
@@ -84,14 +88,13 @@ class Characters():
                 character.init_level_factor = 0
 
     def stats_random_percent(self):
-        import random
         stats = ["init_extra_hp", "init_extra_mp", "init_vigor", "init_speed", "init_stamina", "init_magic",
                  "init_attack", "init_defense", "init_magic_defense", "init_evasion", "init_magic_evasion"]
         for character in self.characters:
             for stat in stats:
                 stat_value = getattr(character, stat)
                 if stat_value != 0:
-                    character_stat_percent = random.randint(self.args.character_stat_random_percent_min,
+                    character_stat_percent = self.stat_random.randint(self.args.character_stat_random_percent_min,
                                                             self.args.character_stat_random_percent_max) / 100.0
                     value = int(stat_value * character_stat_percent)
                     setattr(character, stat, max(min(value, 255), 0))

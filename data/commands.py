@@ -1,9 +1,12 @@
 from constants.commands import *
 import args
+from seed import get_random_instance
 
 class Commands:
-    def __init__(self, characters):
+    def __init__(self, characters, args):
         self.characters = characters
+        self.args = args
+        self.random = get_random_instance(self.args.character_seed)
 
     def mod_commands(self):
         command_set = set(name_id[name] for name in RANDOM_POSSIBLE_COMMANDS)
@@ -24,12 +27,11 @@ class Commands:
             except ValueError:
                 pass
 
-        import random
         for index, command in enumerate(args.character_commands):
             if command not in allowed_commands and (index != 0 or command != name_id["Morph"]) and (index != 12 or command != name_id["Leap"]):
                 raise ValueError(f"Invalid character command {command}")
             elif command == RANDOM_COMMAND:
-                args.character_commands[index] = random.choice(command_list)
+                args.character_commands[index] = self.random.choice(command_list)
                 if args.character_commands[index] == morph_id:
                     command_list.remove(morph_id) # only one character gets morph
             elif command == NONE_COMMAND:
@@ -39,7 +41,7 @@ class Commands:
 
         for index, command in enumerate(args.character_commands):
             if command == RANDOM_UNIQUE_COMMAND:
-                args.character_commands[index] = random.choice(tuple(command_set))
+                args.character_commands[index] = self.random.choice(tuple(command_set))
                 command_set.discard(args.character_commands[index])
 
         # apply the commands to the characters
@@ -57,8 +59,7 @@ class Commands:
             commands.append(self.characters[index].commands[1])
         commands.append(self.characters[Characters.GAU].commands[0]) # rage
 
-        import random
-        random.shuffle(commands)
+        self.random.shuffle(commands)
 
         for index in range(len(COMMAND_OPTIONS) - 1):
             self.characters[index].commands[1] = commands[index]

@@ -1,8 +1,10 @@
+from random import Random
 from data.natural_spell import NaturalSpell
 from data.structures import DataArray
 
 from memory.space import Bank, Reserve, Allocate
 import instruction.asm as asm
+from seed import get_random_instance
 
 class NaturalMagic:
     TERRA_SPELL_DATA_START = 0x2ce3c0
@@ -18,6 +20,7 @@ class NaturalMagic:
         self.args = args
         self.characters = characters
         self.spells = spells
+        self.random: Random = get_random_instance(args.character_seed)
 
         self.terra_spell_data = DataArray(self.rom, self.TERRA_SPELL_DATA_START, self.TERRA_SPELL_DATA_END, self.SPELL_DATA_SIZE)
         self.celes_spell_data = DataArray(self.rom, self.CELES_SPELL_DATA_START, self.CELES_SPELL_DATA_END, self.SPELL_DATA_SIZE)
@@ -113,12 +116,11 @@ class NaturalMagic:
             )
 
     def mod_learners(self):
-        import random
         from data.characters import Characters
         possible_learners = list(range(Characters.CHARACTER_COUNT - 2)) # exclude gogo/umaro
 
         if self.args.natural_magic1 == "random":
-            self.learner1 = random.choice(possible_learners)
+            self.learner1 = self.random.choice(possible_learners)
             self.learner1_name = self.characters.get_name(self.learner1)
         elif self.args.natural_magic1:
             self.learner1 = self.characters.get_by_name(self.args.natural_magic1).id
@@ -133,7 +135,7 @@ class NaturalMagic:
             pass
 
         if self.args.natural_magic2 == "random":
-            self.learner2 = random.choice(possible_learners)
+            self.learner2 = self.random.choice(possible_learners)
             self.learner2_name = self.characters.get_name(self.learner2)
         elif self.args.natural_magic2:
             self.learner2 = self.characters.get_by_name(self.args.natural_magic2).id
@@ -185,16 +187,14 @@ class NaturalMagic:
         self.terra_spells[-1].level = 0
 
     def randomize_levels1(self):
-        import random
-        levels = random.sample(range(1, 100), len(self.terra_spells))
+        levels = self.random.sample(range(1, 100), len(self.terra_spells))
         sorted_levels = sorted(levels)
 
         for index, spell in enumerate(self.terra_spells):
             spell.level = sorted_levels[index]
 
     def randomize_levels2(self):
-        import random
-        levels = random.sample(range(1, 100), len(self.celes_spells))
+        levels = self.random.sample(range(1, 100), len(self.celes_spells))
         sorted_levels = sorted(levels)
 
         for index, spell in enumerate(self.celes_spells):

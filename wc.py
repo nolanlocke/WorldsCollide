@@ -1,8 +1,7 @@
-def wc(args):
+
+def wc(memory, args):
     import log
 
-    from memory.memory import Memory
-    memory = Memory()
 
     from data.data import Data
     data = Data(memory.rom, args)
@@ -27,19 +26,19 @@ def wc(args):
 
 def main():
     import args
-    is_coop = True
-    if is_coop:
-        orig_seed = args.seed
-        args.seed = f"{args.seed}-A"
-        args.character_seed = f"{orig_seed}-Character"
-        args.chest_seed = f"{orig_seed}-Chest"
-        args.monster_seed = f"{orig_seed}-Monster"
-        args.shop_seed = f"{orig_seed}-Shop"
-        wc(args)
-        args.seed = f"{args.seed}-B"
-        wc(args)
-    else:
-        wc(args)
+    from memory.memory import Memory
+    from memory.space import Space
+
+    # create memory instance
+    memory = Memory(args)
+    Space.initialize_space(memory.rom)
+    memory.free()
+
+    output_file = args.output_file
+
+    orig_seed = args.seed
+    args.output_file = f"{args.output_file}"
+    wc(memory, args)
 
 if __name__ == '__main__':
     main()

@@ -13,6 +13,12 @@ class Space():
     heaps = { bank : Heap() for bank in Bank }
     spaces = []
 
+    @staticmethod
+    def initialize_space(rom):
+        Space.rom = rom
+        Space.heaps = { bank : Heap() for bank in Bank }
+        Space.spaces = []
+
     def __init__(self, start_address, end_address, description, clear_value = None):
         self._start_address = start_address
         self._end_address = end_address

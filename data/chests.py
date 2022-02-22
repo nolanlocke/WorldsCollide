@@ -1,5 +1,6 @@
 from data.chest import Chest
 from data.structures import DataArrays
+from seed import get_random_instance
 
 class Chests():
     PTRS_START = 0x2d82f4
@@ -12,6 +13,7 @@ class Chests():
         self.rom = rom
         self.args = args
         self.items = items
+        self.random = get_random_instance(args.chest_seed)
 
         self.chest_data = DataArrays(self.rom, self.PTRS_START, self.PTRS_END, self.rom.SHORT_PTR_SIZE, self.DATA_START, self.DATA_END, self.DATA_SIZE)
 
@@ -61,8 +63,7 @@ class Chests():
         import copy
         chests_shuffle = [copy.deepcopy(chest) for chest in self.chests if chest.type in types]
 
-        import random
-        random.shuffle(chests_shuffle)
+        self.random.shuffle(chests_shuffle)
 
         shuffle_index = 0
         for chest in self.chests:
@@ -75,13 +76,12 @@ class Chests():
 
     def random_tiered(self):
         def get_item():
-            import random
             from data.chest_item_tiers import tiers, weights, tier_s_distribution
             from utils.weighted_random import weighted_random
 
             random_tier = weighted_random(weights)
             if random_tier < len(weights) - 1: # not s tier, use equal distribution
-                random_tier_index = random.randrange(len(tiers[random_tier]))
+                random_tier_index = self.random.randrange(len(tiers[random_tier]))
                 return tiers[random_tier][random_tier_index]
 
             weights = [entry[1] for entry in tier_s_distribution]
@@ -91,10 +91,9 @@ class Chests():
         # first shuffle the chests to mix up empty/item/gold positions
         self.shuffle([Chest.EMPTY, Chest.ITEM, Chest.GOLD])
 
-        import random
         for chest in self.chests:
             if chest.type == Chest.GOLD:
-                chest.contents = int(random.triangular(1, Chest.MAX_GOLD_VALUE + 1, 1))
+                chest.contents = int(self.random.triangular(1, Chest.MAX_GOLD_VALUE + 1, 1))
                 if chest.contents == Chest.MAX_GOLD_VALUE + 1:
                     # triangular max is inclusive, very small chance need to round max down
                     chest.contents = Chest.MAX_GOLD_VALUE
@@ -109,16 +108,15 @@ class Chests():
         if self.args.chest_contents_shuffle_random_percent == 0:
             return
 
-        import random
         possible_chests = [chest for chest in self.chests if chest.type in randomizable_types]
         random_percent = self.args.chest_contents_shuffle_random_percent / 100.0
         num_random_chests = int(len(possible_chests) * random_percent)
-        random_chests = random.sample(possible_chests, num_random_chests)
+        random_chests = self.random.sample(possible_chests, num_random_chests)
         for chest in random_chests:
             if chest.type == Chest.GOLD:
                 chest.randomize_gold()
             elif chest.type == Chest.ITEM:
-                chest.contents = self.items.get_random()
+                chest.contents = self.items.get_random(seed = self.args.chest_seed)
 
     def clear_contents(self):
         for chest in self.chests:

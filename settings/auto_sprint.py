@@ -10,7 +10,7 @@ class AutoSprint:
     def mod(self):
         # set sprint by default, b button to walk, sprint shoes do nothing
 
-        WALK_SPEED = 2
+        WALK_SPEED = 4 if args.auto_sprint else 2
         SPRINT_SPEED = 3
 
         CONTROLLER1_BYTE2 = 0x4219
@@ -32,5 +32,6 @@ class AutoSprint:
             "STORE_SPEED",
             asm.STA(FIELD_RAM_SPEED, asm.ABS_Y),
         ]
+
         space = Reserve(0x04e21, 0x04e37, "auto sprint", asm.NOP())
         space.write(src)

@@ -6,6 +6,7 @@ from data.enemy_packs import EnemyPacks
 from data.enemy_zones import EnemyZones
 from data.enemy_scripts import EnemyScripts
 import data.bosses as bosses
+from seed import get_random_instance
 
 class Enemies():
     DATA_START = 0xf0000
@@ -33,6 +34,8 @@ class Enemies():
         self.enemy_name_data = DataArray(self.rom, self.NAMES_START, self.NAMES_END, self.NAME_SIZE)
         self.enemy_item_data = DataArray(self.rom, self.ITEMS_START, self.ITEMS_END, self.ITEMS_SIZE)
 
+        self.random = get_random_instance(args.enemy_seed)
+
         self.enemies = []
         self.bosses = []
         for enemy_index in range(len(self.enemy_data)):
@@ -57,8 +60,8 @@ class Enemies():
         return len(self.enemies)
 
     def get_random(self):
-        import random
-        random_enemy = random.choice(self.enemies[:255])
+        random_enemy = self.random.choice(self.enemies[:255])
+        print(random_enemy.name)
         return random_enemy.id
 
     def get_enemy(self, name):
@@ -86,7 +89,6 @@ class Enemies():
         self.enemies[enemy_id].drop_common = item_id
 
     def remove_fenix_downs(self):
-        import random
         from data.item_names import name_id
 
         fenix_down = name_id["Fenix Down"]
@@ -96,23 +98,23 @@ class Enemies():
 
         for enemy in self.enemies:
             if enemy.steal_common == fenix_down:
-                replacement = random.choice(possible_replacements)
+                replacement = self.random.choice(possible_replacements)
                 self.set_common_steal(enemy.id, replacement)
 
             if enemy.steal_rare == fenix_down:
-                replacement = random.choice(possible_replacements)
+                replacement = self.random.choice(possible_replacements)
                 self.set_rare_steal(enemy.id, replacement)
 
             if enemy.drop_common == fenix_down:
-                replacement = random.choice(possible_replacements)
+                replacement = self.random.choice(possible_replacements)
                 self.set_common_drop(enemy.id, replacement)
 
             if enemy.drop_rare == fenix_down:
-                replacement = random.choice(possible_replacements)
+                replacement = self.random.choice(possible_replacements)
                 self.set_rare_drop(enemy.id, replacement)
 
     def apply_scaling(self):
-        # lower vargas and whelk's hp
+        # lower vargas and ultros3's hp
         vargas_id = self.get_enemy("Vargas")
         self.enemies[vargas_id].hp = self.enemies[vargas_id].hp // 2
 
@@ -145,8 +147,6 @@ class Enemies():
             self.enemies[enemy_id].exp = exp * self.enemies[enemy_id].level
 
     def boss_normalize_distort_stats(self):
-        import random
-
         def stat_min_max(stat_value, min_possible, max_possible):
             distortion_percent = 0.25
             stat_distortion_amount = int(stat_value * distortion_percent)
@@ -175,7 +175,7 @@ class Enemies():
                     # max rand value is lower than the minimum for this stat, increase it to the minimum
                     stat_max = min_stat_max[stat_index]
 
-                setattr(enemy, stat, random.randint(stat_min, stat_max))
+                setattr(enemy, stat, self.random.randint(stat_min, stat_max))
 
         stats = ["hp", "mp"]
         for enemy in self.bosses:
@@ -192,8 +192,8 @@ class Enemies():
             if mp_max < min_mp_max:
                 mp_max = min_mp_max
 
-            enemy.hp = random.randint(hp_min, hp_max)
-            enemy.mp = random.randint(mp_min, mp_max)
+            enemy.hp = self.random.randint(hp_min, hp_max)
+            enemy.mp = self.random.randint(mp_min, mp_max)
 
     def skip_shuffling_zone(self, maps, zone):
         if zone.MAP and zone.id >= maps.MAP_COUNT:
@@ -257,8 +257,7 @@ class Enemies():
                     formations.append(pack.formations[y])
 
         # shuffle the randomly encounterable formations
-        import random
-        random.shuffle(formations)
+        self.random.shuffle(formations)
 
         for pack in packs:
             for y in range(pack.FORMATION_COUNT):
@@ -286,14 +285,12 @@ class Enemies():
         self.packs.randomize_packs(packs, boss_percent)
 
     def set_escapable(self):
-        import random
-
         escapable_percent = self.args.encounters_escapable_random / 100.0
         for enemy in self.enemies:
             if enemy.id in bosses.enemy_name or enemy.id == self.SRBEHEMOTH2_ID or enemy.id == self.INVINCIBLE_GUARDIAN_ID:
                 continue
 
-            enemy.no_run = random.random() >= escapable_percent
+            enemy.no_run = self.random.random() >= escapable_percent
 
     def no_undead_bosses(self):
         boss_ids = list(bosses.enemy_name.keys())

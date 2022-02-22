@@ -12,3 +12,9 @@ def seed_rng(seed = None, flags = ""):
     import random
     random.seed(seed + flags)
     return seed
+
+def get_random_instance(seed):
+    from random import Random
+    instance = Random()
+    instance.seed(seed)
+    return instance

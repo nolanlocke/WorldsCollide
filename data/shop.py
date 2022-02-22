@@ -85,6 +85,7 @@ class Shop():
             self.items[item_index] = self.NO_ITEM
         self.item_count = 0
 
+    # This doesn't seem to be referenced anywhere in the code.. May have been referenced by Shops in the past?
     def randomize(self, items):
         # does not change the number of items in the shop or the types of each item
         items_added = []

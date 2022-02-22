@@ -10,6 +10,7 @@ class Arguments:
             "starting_gold_items", "items", "shops", "chests",
             "graphics",
             "coliseum", "auction_house", "challenges", "bug_fixes", "misc",
+            "seed"
         ]
         self.group_modules = {}
         for group in self.groups:
@@ -38,7 +39,7 @@ class Arguments:
             group_flags = group.flags(self)
 
             self.flags += group_flags
-            if group_name != "graphics":
+            if group_name != "graphics" and group_name != "seed":
                 # graphics flags are not used for seeding rng
                 self.seed_rng_flags += group_flags
         self.flags = self.flags.strip()
@@ -53,16 +54,19 @@ class Arguments:
 
         import os
         self.website_link = None
+        self.output_file_ext = ".smc"
         if self.seed_id:
             # ignore any output_file argument and add given seed id to output name
             name, ext = os.path.splitext(self.input_file)
-            self.output_file = f"{name}wc_{self.seed_id}{ext}"
+            self.output_file = f"{name}wc_{self.seed_id}"
+            self.output_file_ext = f"{ext}"
 
             self.website_link = f"ff6wc.com/seed/{self.seed_id}"
         elif self.output_file is None:
             # if no output_file given add seed to output name
             name, ext = os.path.splitext(self.input_file)
-            self.output_file = f"{name}_wc_{self.seed}{ext}"
+            self.output_file = f"{name}_wc_{self.seed}"
+            self.output_file_ext = f"{ext}"
 
         if self.debug:
             self.spoiler_log = True

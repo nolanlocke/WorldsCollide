@@ -1,5 +1,6 @@
 from data.shop import Shop
 from data.structures import DataArray
+from seed import get_random_instance
 
 class Shops():
     DATA_START = 0x47ac0
@@ -10,6 +11,7 @@ class Shops():
         self.rom = rom
         self.args = args
         self.items = items
+        self.random = get_random_instance(args.shop_seed)
 
         self.shop_data = DataArray(self.rom, self.DATA_START, self.DATA_END, self.DATA_SIZE)
 
@@ -53,7 +55,6 @@ class Shops():
         }
         type_items[Shop.ITEM].extend(type_items[Shop.VENDOR])
 
-        import random
         import collections
         for shop_type in range(1, Shop.SHOP_TYPE_COUNT - 1): # skip EMPTY and VENDOR shop types
             frequencies = collections.Counter(item for item in type_items[shop_type])
@@ -67,10 +68,10 @@ class Shops():
                 shop.clear()
                 shop_indices.append(shop_index)
 
-            random.shuffle(item_counts)
+            self.random.shuffle(item_counts)
 
             while len(items) > 0:
-                shop_index = random.choice(shop_indices)
+                shop_index = self.random.choice(shop_indices)
                 shop = type_shops[shop_type][shop_index]
                 if not shop.contains(items[-1]):
                     item = items.pop()
@@ -80,7 +81,7 @@ class Shops():
 
     def random_tiered(self):
         def get_item(item_type, exclude = None):
-            import random
+
             from utils.weighted_random import weighted_random
             from data.shop_item_tiers import tiers, weights
 
@@ -97,7 +98,7 @@ class Shops():
                 random_tier = weighted_random(weights[item_type])
                 possible_items = [item_id for item_id in tiers[item_type][random_tier] if item_id not in exclude]
 
-            random_item_index = random.randrange(len(possible_items))
+            random_item_index = self.random.randrange(len(possible_items))
             return possible_items[random_item_index]
 
         self.shuffle()
@@ -121,17 +122,17 @@ class Shops():
         for shop in self.shops:
             total_item_count += shop.item_count
 
-        import random
+
         random_percent = self.args.shop_inventory_shuffle_random_percent / 100.0
         num_random_items = int(total_item_count * random_percent)
-        sorted_random_indices = sorted(random.sample(range(total_item_count), num_random_items), reverse = True)
+        sorted_random_indices = sorted(self.random.sample(range(total_item_count), num_random_items), reverse = True)
 
         total_index = 0
         for shop in self.shops:
             for item_index in range(shop.item_count):
                 if total_index == sorted_random_indices[-1]:
                     item_type = self.items.get_type(shop.items[item_index])
-                    shop.items[item_index] = self.items.get_random(shop.items.copy(), item_type)
+                    shop.items[item_index] = self.items.get_random(shop.items.copy(), item_type, seed = self.args.shop_seed)
 
                     sorted_random_indices.pop()
                     if not sorted_random_indices:
@@ -155,22 +156,22 @@ class Shops():
                 no_dried_meat_shops.append(shop)
         number_shops_with_dried_meat = len(dried_meat_shops)
 
-        import random
+
         if number_shops_with_dried_meat > self.args.shop_dried_meat:
             # too many shops have dried meat, randomly remove extras
             for index in range(self.args.shop_dried_meat, number_shops_with_dried_meat):
-                random_shop = random.choice(dried_meat_shops)
+                random_shop = self.random.choice(dried_meat_shops)
                 random_shop.remove(dried_meat_id)
                 dried_meat_shops.remove(random_shop)
         elif number_shops_with_dried_meat < self.args.shop_dried_meat:
             # too few shops have dried meat, choose random shops and
             # add a dried meat if space, otherwise replace a random item with dried meat
             for index in range(number_shops_with_dried_meat, self.args.shop_dried_meat):
-                random_shop = random.choice(no_dried_meat_shops)
+                random_shop = self.random.choice(no_dried_meat_shops)
                 if not random_shop.full():
                     random_shop.append(dried_meat_id)
                 else:
-                    random_index = random.randrange(random_shop.item_count)
+                    random_index = self.random.randrange(random_shop.item_count)
                     random_shop.items[random_index] = dried_meat_id
                 no_dried_meat_shops.remove(random_shop)
 
@@ -188,8 +189,8 @@ class Shops():
         # possible shops the dried meat can be moved to
         possible_shops = self.type_shops[Shop.ITEM] + self.type_shops[Shop.VENDOR]
 
-        import random
-        random.shuffle(possible_shops)
+
+        self.random.shuffle(possible_shops)
 
         for random_shop in possible_shops:
             if random_shop.contains(dried_meat_id):
@@ -203,7 +204,7 @@ class Shops():
 
             # try to find an item in random_shop that phantom train does not have and swap them
             item_indices = list(range(random_shop.item_count))
-            random.shuffle(item_indices)
+            self.random.shuffle(item_indices)
             for item_index in item_indices:
                 item = random_shop.items[item_index]
                 item_type = self.items.get_type(item)

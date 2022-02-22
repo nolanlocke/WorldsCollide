@@ -1,6 +1,7 @@
 from data.enemy_formation import EnemyFormation
 from data.structures import DataArray
 import data.bosses as bosses
+from seed import get_random_instance
 
 class EnemyFormations():
     FLAGS_START = 0xf5900
@@ -20,6 +21,7 @@ class EnemyFormations():
         self.rom = rom
         self.args = args
         self.enemies = enemies
+        self.random = get_random_instance(args.enemy_seed)
 
         self.flags_data = DataArray(self.rom, self.FLAGS_START, self.FLAGS_END, self.FLAGS_SIZE)
         self.enemies_data = DataArray(self.rom, self.ENEMIES_START, self.ENEMIES_END, self.ENEMIES_SIZE)
@@ -86,20 +88,19 @@ class EnemyFormations():
         return False
 
     def get_random_normal(self):
-        import random
-        return random.choice(self.normal)
+
+        return self.random.choice(self.normal)
 
     def get_random_boss(self, exclude = None):
-        import random
         if exclude is None:
-            return random.choice(self.bosses)
+            return self.random.choice(self.bosses)
 
         possible_bosses = [boss_id for boss_id in self.bosses if boss_id not in exclude]
-        return random.choice(possible_bosses)
+        return self.random.choice(possible_bosses)
 
     def get_random_dragon(self):
-        import random
-        return random.choice(self.dragons)
+
+        return self.random.choice(self.dragons)
 
     def set_chadarnook_position_left_screen(self):
         self.formations[456].enemy_x_positions[0] = 1 # painting

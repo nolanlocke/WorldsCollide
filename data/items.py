@@ -5,6 +5,7 @@ from data.items_good import good_items
 from data.item_names import id_name, name_id
 
 import data.items_asm as items_asm
+from seed import get_random_instance
 
 class Items():
     ITEM_COUNT = 256
@@ -18,7 +19,7 @@ class Items():
         self.args = args
         self.dialogs = dialogs
         self.characters = characters
-        self.good_items = good_items
+        self.good_items = good_items.copy()
 
         if self.args.stronger_atma_weapon:
             self.good_items.append(name_id["Atma Weapon"])
@@ -289,18 +290,23 @@ class Items():
 
         return exclude
 
-    def get_random(self, exclude = None, item_types = None):
+    def get_random(self, exclude = None, item_types = None, seed = None):
         if exclude is None:
             exclude = []
         exclude.extend(self.get_excluded())
 
+        if seed is None:
+            item_random = random
+        else:
+            item_random = get_random_instance(seed)
+
         try:
             # pick random type if multiple provided
-            item_type = random.choice(item_types)
+            item_type = item_random.choice(item_types)
         except TypeError:
             item_type = item_types
 
-        return random.choice(self.get_items(exclude, item_type))
+        return item_random.choice(self.get_items(exclude, item_type))
 
     def get_good_random(self):
         return random.choice(self.good_items)
