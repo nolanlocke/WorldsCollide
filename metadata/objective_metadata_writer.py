@@ -2,6 +2,7 @@ from constants.objectives.conditions import ObjectiveConditionType
 from data.text.text1 import text_value
 from memory.rom import ROM
 from memory.space import Allocate, Bank
+from metadata.objective_metadata import ObjectiveMetadata
 from utils.flatten import flatten
 from objectives.conditions._objective_condition import ObjectiveCondition
 
@@ -125,47 +126,18 @@ class ObjectiveMetadataWriter:
         condition_data += this_condition_data
 
         return condition_data
-
-    def allocate_name(self, target_name):
-        cached = self.name_spaces.get(target_name)
-        if cached:
-            return cached
-
-        obj_name = [len(target_name)] + [ord(s) for s in target_name] + [10, 10] # first byte length of text, terminate with 2 newline characters
-        space_to_write = Allocate(Bank[NAME_BANK], len(obj_name), f"Write name '{target_name}'", 0xFF)
-
-        self.name_spaces[target_name] = space_to_write
-
-        space_to_write.write(obj_name)
-
-        return space_to_write
-
     def write(self):
-        objective_data = []
-        name_data = []
+        import json
+        meta = []
         for index in range(0, len(self.objectives)):
-            [objective, data] = self.get_objective_metadata(index)
-            objective_data += flatten(data)
+            objective = self.objectives[index]
+            meta.append(ObjectiveMetadata(objective))
 
-        header = flatten([
-            10, # $00 arbitrary id
-            int(OBJECTIVE_BANK, 16), # $01 bank of objective data
-            None, # $02 high byte - offset for start of objective data (from start of bank)
-            None, # $03 low  byte - offset for start of objective data (from start of bank)
-            None, # $04 high byte - size of objective data
-            None, # $05 low  byte - size of objective data
-            len(self.objectives), # $06
-            [255 for f in range(0, 9)]
-        ])
-
-        header_space = Allocate(Bank[HEADER_BANK], len(header), "Objective Header")
-        objective_space = Allocate(Bank[OBJECTIVE_BANK], len(objective_data), f"Objective Metadata", 0xFF)
-        # set $02-$03
-        header[2:4] = self.get_high_low_bytes(objective_space.start_address - OBJECTIVE_BANK_INT)
-        # set $04-$05
-        header[4:6] = self.get_high_low_bytes(len(objective_data))
-        header_space.write(header)
-        objective_space.write(objective_data)
+        final_data = [o.to_json() for o in meta]
+        if not self.args.no_rom_output:
+            file_name = self.args.output_file.replace('.smc', '.json')
+            with open(file_name, "w") as out_file:
+                out_file.write(json.dumps(final_data, indent = 4))
 
     def __len__(self):
         return len(self.objectives)
