@@ -1,5 +1,6 @@
 import args
 from objectives.results._objective_result import *
+from seed import get_random_instance
 
 def _random_blitz_table():
     from constants.blitzes import id_blitz

@@ -1,5 +1,6 @@
 import args
 from objectives.results._objective_result import *
+from seed import get_random_instance
 
 def _random_dance_table():
     from constants.dances import id_dance

@@ -1,5 +1,6 @@
 from objectives.results._objective_result import *
 import args
+from seed import get_random_instance
 
 def _random_spell_table():
     from constants.spells import spell_id

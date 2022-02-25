@@ -1,6 +1,7 @@
 import args
 from objectives.results._objective_result import *
 import instruction.f0 as f0
+from seed import get_random_instance
 
 def _random_lore_table():
     from constants.lores import id_lore
