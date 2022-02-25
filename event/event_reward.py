@@ -1,4 +1,6 @@
 from enum import Flag, unique, auto
+
+from seed import get_random_instance
 @unique
 class RewardType(Flag):
     NONE = auto()
@@ -8,6 +10,7 @@ class RewardType(Flag):
 
 class Reward:
     def __init__(self, event, possible_types):
+        import args
         self.id = None
         self.type = None
         self.event = event
@@ -30,9 +33,9 @@ class Reward:
         return result + " (" + ', '.join(possible_strings) + ")"
 
 def choose_reward(possible_types, characters, espers, items):
-    import random
-
+    import args
     all_types = [flag for flag in RewardType]
+    random = get_random_instance(f"{args.subseed_check}-rewards")
     random.shuffle(all_types)
 
     item_possible = False
@@ -75,8 +78,8 @@ def reward_slot_weights(slot_iterations, iteration):
 
 # return index of randomly chosen (biased) slots
 # https://eli.thegreenplace.net/2010/01/22/weighted-random-generation-in-python/
-def weighted_reward_choice(slot_iterations, iteration):
+def weighted_reward_choice(slot_iterations, iteration, random_instance = None):
     weights = reward_slot_weights(slot_iterations, iteration)
 
     from utils.weighted_random import weighted_random
-    return weighted_random(weights)
+    return weighted_random(weights, random_instance)

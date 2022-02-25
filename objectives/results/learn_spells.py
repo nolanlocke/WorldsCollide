@@ -3,6 +3,7 @@ import args
 
 def _random_spell_table():
     from constants.spells import spell_id
+    random = get_random_instance(f"{args.subseed_check}--learn_spells")
 
     spell_table = list(range(len(spell_id)))
     if args.no_ultima:
@@ -102,5 +103,9 @@ class Battle(battle_result.Result):
 class Result(ObjectiveResult):
     NAME = "Learn Spells"
     def __init__(self, min_count, max_count):
+        import args
+        from seed import get_random_instance
+        random = get_random_instance(f"{args.subseed_check}--condition-{self.NAME}")
+
         self.count = random.randint(min_count, max_count)
         super().__init__(Field, Battle, self.count)

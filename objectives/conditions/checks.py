@@ -1,9 +1,11 @@
+import args
 from objectives.conditions._objective_condition import *
-import random
+from seed import get_random_instance
 
 class Condition(ObjectiveCondition):
     NAME = "Checks"
     def __init__(self, min_count, max_count):
+        random = get_random_instance(f"{args.subseed_check}--condition-{self.NAME}")
         self.count = random.randint(min_count, max_count)
         super().__init__(ConditionType.EventWord, event_word.CHECKS_COMPLETE, self.count)
 

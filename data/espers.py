@@ -3,7 +3,7 @@ from data.ability_data import AbilityData
 from data.structures import DataArray
 
 import data.espers_asm as espers_asm
-import random
+from seed import get_random_instance
 
 class Espers():
     ESPER_COUNT = 27
@@ -34,6 +34,8 @@ class Espers():
         self.args = args
         self.spells = spells
         self.characters = characters
+
+        self.random = get_random_instance(args.subseed_esper)
 
         self.spells_bonus_data = DataArray(self.rom, self.SPELLS_BONUS_DATA_START, self.SPELLS_BONUS_DATA_END, self.SPELLS_BONUS_DATA_SIZE)
         self.name_data = DataArray(self.rom, self.NAMES_START, self.NAMES_END, self.NAME_SIZE)
@@ -94,15 +96,15 @@ class Espers():
             esper.clear_spells()
             esper_indices.append(esper_index)
 
-        random.shuffle(spell_counts)
+        self.random.shuffle(spell_counts)
 
         while len(spells) > 0:
-            esper_index = random.choice(esper_indices)
+            esper_index = self.random.choice(esper_indices)
             esper = self.espers[esper_index]
             if not esper.has_spell(spells[-1].id):
                 spell = spells.pop()
                 if self.args.esper_spells_shuffle_random_rates:
-                    esper.add_spell(spell.id, random.choice(Esper.LEARN_RATES))
+                    esper.add_spell(spell.id, self.random.choice(Esper.LEARN_RATES))
                 else:
                     esper.add_spell(spell.id, spell.rate)
                 if esper.spell_count == spell_counts[esper_index]:
@@ -111,30 +113,30 @@ class Espers():
     def randomize_spells(self):
         for esper in self.espers:
             esper.clear_spells()
-            num_spells = random.randint(self.args.esper_spells_random_min, self.args.esper_spells_random_max)
-            spells = self.spells.get_random(count = num_spells)
+            num_spells = self.random.randint(self.args.esper_spells_random_min, self.args.esper_spells_random_max)
+            spells = self.spells.get_random(count = num_spells, random_instance = self.random)
             for spell_id in spells:
-                esper.add_spell(spell_id, random.choice(Esper.LEARN_RATES))
+                esper.add_spell(spell_id, self.random.choice(Esper.LEARN_RATES))
 
     def randomize_spells_tiered(self):
         def get_spell():
             from data.esper_spell_tiers import tiers, weights, tier_s_distribution
             from utils.weighted_random import weighted_random
 
-            random_tier = weighted_random(weights)
+            random_tier = weighted_random(weights, random_instance = self.random)
             if random_tier < len(weights) - 1: # not s tier, use equal distribution
-                random_tier_index = random.randrange(len(tiers[random_tier]))
+                random_tier_index = self.random.randrange(len(tiers[random_tier]))
                 return tiers[random_tier][random_tier_index]
 
             weights = [entry[1] for entry in tier_s_distribution]
-            random_s_index = weighted_random(weights)
+            random_s_index = weighted_random(weights, random_instance = self.random)
             return tier_s_distribution[random_s_index][0]
 
         for esper in self.espers:
             esper.clear_spells()
-            num_spells = random.randint(1, Esper.SPELL_COUNT)
+            num_spells = self.random.randint(1, Esper.SPELL_COUNT)
             for spell_index in range(num_spells):
-                learn_rate_index = int(random.triangular(0, len(Esper.LEARN_RATES), 0))
+                learn_rate_index = int(self.random.triangular(0, len(Esper.LEARN_RATES), 0))
                 if learn_rate_index == len(Esper.LEARN_RATES):
                     # triangular max is inclusive, very small chance need to round max down
                     learn_rate_index -= 1
@@ -165,22 +167,23 @@ class Espers():
 
     def randomize_rates(self):
         for esper in self.espers:
-            esper.randomize_rates()
+            for spell_index in range(esper.spell_count):
+                esper.set_rate(spell_index, self.random.choice(Esper.LEARN_RATES))
 
     def shuffle_bonuses(self):
         bonuses = []
         for esper in self.espers:
             bonuses.append(esper.bonus)
 
-        random.shuffle(bonuses)
+        self.random.shuffle(bonuses)
         for esper in self.espers:
             esper.set_bonus(bonuses.pop())
 
     def randomize_bonuses(self):
         bonus_percent = self.args.esper_bonuses_random_percent / 100.0
         for esper in self.espers:
-            if random.random() < bonus_percent:
-                esper.randomize_bonus()
+            if self.random.random() < bonus_percent:
+                esper.set_bonus(self.random.choice(Esper.BONUSES))
             else:
                 esper.set_bonus(Esper.NO_BONUS)
 
@@ -189,17 +192,17 @@ class Espers():
         for esper in self.espers:
             mp.append(esper.mp)
 
-        random.shuffle(mp)
+        self.random.shuffle(mp)
         for esper in self.espers:
             esper.mp = mp.pop()
 
     def random_mp_value(self):
         for esper in self.espers:
-            esper.mp = random.randint(self.args.esper_mp_random_value_min, self.args.esper_mp_random_value_max)
+            esper.mp = self.random.randint(self.args.esper_mp_random_value_min, self.args.esper_mp_random_value_max)
 
     def random_mp_percent(self):
         for esper in self.espers:
-            mp_percent = random.randint(self.args.esper_mp_random_percent_min,
+            mp_percent = self.random.randint(self.args.esper_mp_random_percent_min,
                                         self.args.esper_mp_random_percent_max) / 100.0
             value = int(esper.mp * mp_percent)
             esper.mp = max(min(value, 255), 1)
@@ -210,8 +213,8 @@ class Espers():
 
         for esper in self.espers:
             esper.equipable_characters = 0 # set equipable by no characters
-            number_characters = random.randint(self.args.esper_equipable_random_min, self.args.esper_equipable_random_max)
-            random_characters = random.sample(possible_characters, number_characters)
+            number_characters = self.random.randint(self.args.esper_equipable_random_min, self.args.esper_equipable_random_max)
+            random_characters = self.random.sample(possible_characters, number_characters)
             for character in random_characters:
                 esper.equipable_characters |= (1 << character)
 
@@ -237,7 +240,7 @@ class Espers():
                 # select characters at random from possible pool until
                 # character_group contains characters_per_esper unique characters
                 while len(character_group) < characters_per_esper:
-                    candidate = random.choice(possible_characters)
+                    candidate = self.random.choice(possible_characters)
                     if candidate not in character_group:
                         character_group.append(candidate)
                         possible_characters.remove(candidate)
@@ -246,7 +249,7 @@ class Espers():
                 for character in character_group:
                     esper.equipable_characters |= (1 << character)
             else:
-                character_group = random.sample(possible_characters, characters_per_esper)
+                character_group = self.random.sample(possible_characters, characters_per_esper)
                 for character in character_group:
                     possible_characters.remove(character)
                     esper.equipable_characters |= (1 << character)
@@ -326,7 +329,7 @@ class Espers():
         if not self.available_espers:
             return None
 
-        rand_esper = random.sample(self.available_espers, 1)[0]
+        rand_esper = self.random.sample(self.available_espers, 1)[0]
         self.available_espers.remove(rand_esper)
         return rand_esper
 

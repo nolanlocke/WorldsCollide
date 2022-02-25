@@ -35,7 +35,7 @@ class CollapsingHouse(Event):
 
     def timer_mod(self):
         if self.args.event_timers_random:
-            import random
+            random = get_random_instance(f"{self.args.subseed_check}--collapsing_house_timer")
 
             # randomize timer between 2 and 5 minutes
             seconds = random.randint(120, 300)

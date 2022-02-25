@@ -5,6 +5,7 @@ from data.enemy_script_abilities import EnemyScriptAbilities
 from data.structures import DataMap
 
 import data.enemy_script_commands as ai_instr
+from seed import get_random_instance
 
 class EnemyScripts():
     SCRIPT_PTRS_START = 0xf8400
@@ -55,8 +56,7 @@ class EnemyScripts():
         # randomize time until rizopas appears to prevent doing nothing until 60 seconds passes
         piranha_script = self.get_script("Piranha")
 
-        import random
-        random_time = random.randint(5, 55) # average of 30
+        random_time = get_random_instance(f"{self.args.subseed_command}-rizopas").randint(5, 55) # average of 30
 
         original_time = 60
         if random_time == original_time:

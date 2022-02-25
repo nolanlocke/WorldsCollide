@@ -27,7 +27,7 @@ class EnemyPacks():
         self.pack4_data = DataArray(self.rom, self.PACK4_START, self.PACK4_END, self.PACK4_SIZE)
         self.pack2_data = DataArray(self.rom, self.PACK2_START, self.PACK2_END, self.PACK2_SIZE)
 
-        self.random = get_random_instance(args.enemy_seed)
+        self.random = get_random_instance(f"{args.subseed_boss}-enemy_packs")
 
         self.packs = []
         for pack4_index in range(len(self.pack4_data)):
@@ -109,6 +109,7 @@ class EnemyPacks():
 
         boss_condition_name = "Boss"
         dragon_condition_name = "Dragon"
+
         assert boss_condition_name in possible_condition_names
         assert dragon_condition_name in possible_condition_names
 

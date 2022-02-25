@@ -38,7 +38,7 @@ class Veldt(Event):
             self.char = self.reward.id
             self.sprite = self.reward.id
         else:
-            import random
+            random = get_random_instance(f"{self.args.subseed_check}--collapsing_house_timer")
             self.sprite = random.choice([14, 15, 19, 20])
 
         self.leap_mod()

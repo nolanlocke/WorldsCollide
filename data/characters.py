@@ -30,8 +30,8 @@ class Characters():
         self.rom = rom
         self.args = args
 
-        self.stat_random: Random = get_random_instance(f"{args.character_seed}-stats")
-        self.char_random: Random = get_random_instance(f"{args.character_seed}-character")
+        self.stat_random: Random = get_random_instance(f"{args.subseed_start}-stats")
+        self.char_random: Random = get_random_instance(f"{args.subseed_start}-character")
 
         self.init_data = DataArray(self.rom, self.INIT_DATA_START, self.INIT_DATA_END, self.INIT_DATA_SIZE)
         self.name_data = DataArray(self.rom, self.NAMES_START, self.NAMES_END, self.NAME_SIZE)
@@ -190,7 +190,7 @@ class Characters():
     def get_random_esper_item_sprite(self):
         sprites = [self.SOLDIER, self.IMP, self.MERCHANT, self.GHOST]
 
-        import random
+        random = get_random_instance(self.args.subseed_check)
         return sprites[random.randrange(len(sprites))]
 
     def get_palette(self, character):

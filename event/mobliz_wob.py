@@ -7,7 +7,8 @@ class MoblizWOB(Event):
         return "Mobliz WOB"
 
     def mod(self):
-        self.item_reward = self.items.get_random()
+        random = get_random_instance(f"{self.args.subseed_check}--mobliz_wob")
+        self.item_reward = self.items.get_random(random_instance = random)
         self.item_reward_name = id_name[self.item_reward]
         self.log_change("Tintinabar", self.item_reward_name)
 

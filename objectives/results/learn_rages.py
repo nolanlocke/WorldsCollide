@@ -1,9 +1,11 @@
 from objectives.results._objective_result import *
 import instruction.f0 as f0
+from seed import get_random_instance
 
 def _random_rage_table():
     from constants.rages import id_rage
-
+    import args
+    random = get_random_instance(f"{args.subseed_check}--random_rage_table")
     rage_table = list(range(len(id_rage)))
     random.shuffle(rage_table)
 
@@ -78,5 +80,9 @@ class Battle(battle_result.Result):
 class Result(ObjectiveResult):
     NAME = "Learn Rages"
     def __init__(self, min_count, max_count):
+        import args
+        from seed import get_random_instance
+        random = get_random_instance(f"{args.subseed_check}--condition-{self.NAME}")
+
         self.count = random.randint(min_count, max_count)
         super().__init__(Field, Battle, self.count)

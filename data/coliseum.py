@@ -1,4 +1,5 @@
 from data.match import Match
+from seed import get_random_instance
 
 class Coliseum():
     MATCH_COUNT = 256
@@ -11,6 +12,7 @@ class Coliseum():
         self.items = items
 
         self.read()
+        self.random = get_random_instance(f"{args.subseed_coliseum}--coliseum")
 
     def read(self):
         self.matches = []
@@ -25,31 +27,28 @@ class Coliseum():
         opponents = []
         for match in self.matches:
             opponents.append(match.opponent)
-        import random
-        random.shuffle(opponents)
+        self.random.shuffle(opponents)
         for match_index, match in enumerate(self.matches):
             match.opponent = opponents[match_index]
 
     def randomize_opponents(self):
         for match in self.matches:
-            match.opponent = self.enemies.get_random()
+            match.opponent = self.enemies.get_random(random_instance = self.random)
 
     def shuffle_rewards(self):
         rewards = []
         for match in self.matches:
             rewards.append(match.reward)
 
-        import random
-        random.shuffle(rewards)
+        self.random.shuffle(rewards)
         for match_index, match in enumerate(self.matches):
             match.reward = rewards[match_index]
 
     def randomize_rewards(self):
         for match in self.matches:
-            match.reward = self.items.get_random()
+            match.reward = self.items.get_random(random_instance = self.random)
 
     def remove_excluded_items(self):
-        import random
 
         exclude = self.items.get_excluded()
         if self.args.coliseum_no_exp_eggs:
@@ -61,17 +60,16 @@ class Coliseum():
 
         for match in self.matches:
             if match.reward in exclude:
-                match.reward = random.choice(possible_items)
+                match.reward = self.random.choice(possible_items)
 
     def randomize_rewards_hidden(self):
         for match in self.matches:
             match.reward_hidden = 0
 
-        import random
-        number_visible = random.randint(self.args.coliseum_rewards_visible_random_min,
+        number_visible = self.random.randint(self.args.coliseum_rewards_visible_random_min,
                                         self.args.coliseum_rewards_visible_random_max)
         number_hidden = self.items.ITEM_COUNT - number_visible - 1
-        hidden_indices = random.sample(range(self.items.ITEM_COUNT - 1), number_hidden)
+        hidden_indices = self.random.sample(range(self.items.ITEM_COUNT - 1), number_hidden)
         for match_index in hidden_indices:
             self.matches[match_index].reward_hidden = 1
 

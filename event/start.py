@@ -1,5 +1,4 @@
 from event.event import *
-import random
 
 class Start(Event):
     def name(self):
@@ -182,6 +181,7 @@ class Start(Event):
 
         tools = ["NoiseBlaster", "Bio Blaster", "Flash", "Chain Saw",
                  "Debilitator", "Drill", "Air Anchor", "AutoCrossbow"]
+        random = get_random_instance(f"{self.args.subseed_start}")
         start_tools = random.sample(tools, self.args.start_tools)
         for tool in start_tools:
             src += [

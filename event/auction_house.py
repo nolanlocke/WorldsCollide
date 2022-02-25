@@ -93,10 +93,11 @@ class AuctionHouse(Event):
             self.item2_mod(self.reward2.id)
 
         if self.args.auction_random_items:
-            self.cherub_down_new_item = self.items.get_random()
-            self.cure_ring_new_item = self.items.get_random()
-            self.hero_ring_new_item = self.items.get_random()
-            self.zephyr_cape_new_item = self.items.get_random()
+            random = get_random_instance(f"{self.args.subseed_auction_house}--auction_house")
+            self.cherub_down_new_item = self.items.get_random(random_instance = random)
+            self.cure_ring_new_item = self.items.get_random(random_instance = random)
+            self.hero_ring_new_item = self.items.get_random(random_instance = random)
+            self.zephyr_cape_new_item = self.items.get_random(random_instance = random)
 
             self.cherub_down_mod(self.cherub_down_new_item)
             self.cure_ring_mod(self.cure_ring_new_item)

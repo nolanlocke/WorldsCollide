@@ -4,7 +4,7 @@ from objectives._conditions_complete import ConditionsComplete
 from objectives._check_complete import CheckComplete
 
 import args
-import random
+from seed import get_random_instance
 
 class Objective:
     def __init__(self, id):
@@ -13,10 +13,12 @@ class Objective:
 
         self.letter = arg_objective.letter
 
+        self.random = get_random_instance(f"{args.subseed_check}--objective-{self.letter}")
+
         self._init_result(arg_objective.result)
         self._init_conditions(arg_objective.conditions)
 
-        self.conditions_required = random.randint(arg_objective.conditions_required_min,
+        self.conditions_required = self.random.randint(arg_objective.conditions_required_min,
                                                   arg_objective.conditions_required_max)
 
         self.conditions_complete = ConditionsComplete(self)
@@ -40,9 +42,9 @@ class Objective:
         else:
             possible_types = [_type for _type in category_types[category] if _type.format_string != "Random"]
 
-        random_type = random.choice(possible_types)
+        random_type = self.random.choice(possible_types)
         if random_type.value_range:
-            random_value = random.choice(random_type.value_range)
+            random_value = self.random.choice(random_type.value_range)
             random_args = [random_value, random_value]
         else:
             random_args = []
@@ -85,21 +87,21 @@ class Objective:
         # next, initialize conditions with 'Random' argument chosen
         for index, arg_condition in enumerate(arg_conditions):
             if arg_condition.name != "Random" and arg_condition.args[0] == 'r':
-                random_arg = random.choice(possible_random_values[arg_condition.name])
+                random_arg = self.random.choice(possible_random_values[arg_condition.name])
                 possible_random_values[arg_condition.name].remove(random_arg)
                 self.conditions[index] = conditions[arg_condition.name](random_arg)
 
         # finally, initialize conditions with 'Random' type
         for index, arg_condition in enumerate(arg_conditions):
             if arg_condition.name == "Random":
-                random_type = name_type[random.choice(possible_random_types)]
+                random_type = name_type[self.random.choice(possible_random_types)]
                 possible_random_types.remove(random_type.name)
 
                 if random_type.min_max:
-                    random_value = random.choice(random_type.value_range)
+                    random_value = self.random.choice(random_type.value_range)
                     self.conditions[index] = conditions[random_type.name](random_value, random_value)
                 else:
-                    random_value = random.choice(possible_random_values[random_type.name])
+                    random_value = self.random.choice(possible_random_values[random_type.name])
                     possible_random_values[random_type.name].remove(random_value)
                     self.conditions[index] = conditions[random_type.name](random_value)
 

@@ -14,6 +14,7 @@ import instruction.vehicle as vehicle
 
 from instruction.event import EVENT_CODE_START
 from event.event_reward import RewardType, Reward
+from seed import get_random_instance
 
 class Event():
     def __init__(self, events, rom, args, dialogs, characters, items, maps, enemies, espers, shops):

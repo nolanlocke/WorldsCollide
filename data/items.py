@@ -1,4 +1,3 @@
-import random
 from data.item import Item
 
 from data.items_good import good_items
@@ -20,6 +19,7 @@ class Items():
         self.dialogs = dialogs
         self.characters = characters
         self.good_items = good_items.copy()
+        self.random = get_random_instance(f"{args.subseed_chest}-data.items")
 
         if self.args.stronger_atma_weapon:
             self.good_items.append(name_id["Atma Weapon"])
@@ -49,8 +49,8 @@ class Items():
         for item in self.items:
             if item.is_equipable() and item.id != self.EMPTY and type_condition(item.type):
                 item.remove_all_equipable_characters()
-                num_chars = random.randint(rand_min, rand_max)
-                rand_chars = random.sample(self.characters.playable, num_chars)
+                num_chars = self.random.randint(rand_min, rand_max)
+                rand_chars = self.random.sample(self.characters.playable, num_chars)
                 for character in rand_chars:
                     item.add_equipable_character(character)
 
@@ -76,7 +76,7 @@ class Items():
                     # select characters at random from possible pool until
                     # character_group contains characters_per_item unique characters
                     while len(character_group) < characters_per_item:
-                        candidate = random.choice(possible_characters)
+                        candidate = self.random.choice(possible_characters)
                         if candidate not in character_group:
                             character_group.append(candidate)
                             possible_characters.remove(candidate)
@@ -85,7 +85,7 @@ class Items():
                     for character in character_group:
                         item.add_equipable_character(self.characters.playable[character])
                 else:
-                    character_group = random.sample(possible_characters, characters_per_item)
+                    character_group = self.random.sample(possible_characters, characters_per_item)
                     for character in character_group:
                         possible_characters.remove(character)
                         item.add_equipable_character(self.characters.playable[character])
@@ -99,9 +99,9 @@ class Items():
         for item in self.items:
             if item.is_equipable() and item.id != self.EMPTY and type_condition(item.type):
                 for character in self.characters.playable:
-                    if percent < 0 and item.equipable_by(character) and random.random() < -percent:
+                    if percent < 0 and item.equipable_by(character) and self.random.random() < -percent:
                         item.remove_equipable_character(character)
-                    elif percent > 0 and not item.equipable_by(character) and random.random() < percent:
+                    elif percent > 0 and not item.equipable_by(character) and self.random.random() < percent:
                         item.add_equipable_character(character)
 
     def equipable_shuffle_random(self, type_condition, percent):
@@ -146,12 +146,12 @@ class Items():
 
     def random_prices_value(self):
         for item in self.items:
-            item.price = random.randint(self.args.shop_prices_random_value_min,
+            item.price = self.random.randint(self.args.shop_prices_random_value_min,
                                         self.args.shop_prices_random_value_max)
 
     def random_prices_percent(self):
         for item in self.items:
-            price_percent = random.randint(self.args.shop_prices_random_percent_min,
+            price_percent = self.random.randint(self.args.shop_prices_random_percent_min,
                                            self.args.shop_prices_random_percent_max) / 100.0
             value = int(item.price * price_percent)
             item.price = max(min(value, 2**16 - 1), 0)
@@ -211,7 +211,7 @@ class Items():
         if self.args.cursed_shield_battles_original:
             self.cursed_shield_battles = 256
         else:
-            self.cursed_shield_battles = random.randint(self.args.cursed_shield_battles_min,
+            self.cursed_shield_battles = self.random.randint(self.args.cursed_shield_battles_min,
                                                         self.args.cursed_shield_battles_max)
             items_asm.cursed_shield_mod(self.cursed_shield_battles)
 
@@ -290,15 +290,12 @@ class Items():
 
         return exclude
 
-    def get_random(self, exclude = None, item_types = None, seed = None):
+    def get_random(self, exclude = None, item_types = None, random_instance = None):
         if exclude is None:
             exclude = []
         exclude.extend(self.get_excluded())
 
-        if seed is None:
-            item_random = random
-        else:
-            item_random = get_random_instance(seed)
+        item_random = random_instance if random_instance is not None else self.random
 
         try:
             # pick random type if multiple provided
@@ -309,7 +306,7 @@ class Items():
         return item_random.choice(self.get_items(exclude, item_type))
 
     def get_good_random(self):
-        return random.choice(self.good_items)
+        return self.random.choice(self.good_items)
 
     def get_receive_dialog(self, item):
         return self.receive_dialogs[item]

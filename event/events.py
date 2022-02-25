@@ -1,6 +1,7 @@
 from memory.space import Bank, Allocate
 from event.event_reward import RewardType, Reward, choose_reward, weighted_reward_choice
 import instruction.field as field
+from seed import get_random_instance
 
 class Events():
     def __init__(self, rom, args, data):
@@ -14,6 +15,8 @@ class Events():
         self.enemies = data.enemies
         self.espers = data.espers
         self.shops = data.shops
+
+        self.random = get_random_instance(self.args.subseed_check)
 
         self.mod()
 
@@ -59,7 +62,6 @@ class Events():
             section("Events", log_strings, [])
 
     def init_reward_slots(self, events):
-        import random
         reward_slots = []
         for event in events:
             event.init_rewards()
@@ -67,7 +69,7 @@ class Events():
                 if reward.id is None:
                     reward_slots.append(reward)
 
-        random.shuffle(reward_slots)
+        self.random.shuffle(reward_slots)
         return reward_slots
 
     def choose_single_possible_type_rewards(self, reward_slots):
@@ -85,7 +87,6 @@ class Events():
             slot.id, slot.type = choose_reward(slot.possible_types, self.characters, self.espers, self.items)
 
     def character_gating_mod(self, events, name_event):
-        import random
         reward_slots = self.init_reward_slots(events)
 
         # for every event with only one reward type possible, assign random rewards
@@ -122,7 +123,7 @@ class Events():
                     unlocked_slot_iterations.append(slot_iterations[slot])
 
             # pick slot for the next character weighted by number of iterations each slot has been available
-            slot_index = weighted_reward_choice(unlocked_slot_iterations, iteration)
+            slot_index = weighted_reward_choice(unlocked_slot_iterations, iteration, get_random_instance(self.args.subseed_start))
             slot = unlocked_slots[slot_index]
             slot.id = self.characters.get_random_available()
             slot.type = RewardType.CHARACTER
@@ -132,7 +133,7 @@ class Events():
 
         # get all reward slots still available
         reward_slots = [reward for event in events for reward in event.rewards if reward.id is None]
-        random.shuffle(reward_slots) # shuffle to prevent picking them in alphabetical order
+        self.random.shuffle(reward_slots) # shuffle to prevent picking them in alphabetical order
 
         # for every event with only char/esper rewards possible, assign random rewards
         self.choose_char_esper_possible_rewards(reward_slots)
@@ -144,7 +145,6 @@ class Events():
         return
 
     def open_world_mod(self, events):
-        import random
         reward_slots = self.init_reward_slots(events)
 
         # first choose all the rewards that only have a single type possible

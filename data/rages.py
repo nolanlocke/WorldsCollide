@@ -1,5 +1,6 @@
 from data.rage import Rage
 from data.structures import DataBits, DataArray
+from seed import get_random_instance
 
 class Rages():
     RAGE_COUNT = 256 # 255 available
@@ -19,6 +20,8 @@ class Rages():
         self.args = args
         self.enemies = enemies
 
+        self.random = get_random_instance(f"{args.subseed_command}-rages")
+
         self.init_data = DataBits(self.rom, self.INITIAL_RAGES_START, self.INITIAL_RAGES_END)
         self.attack_data = DataArray(self.rom, self.ATTACKS_DATA_START, self.ATTACKS_DATA_END, self.ATTACKS_DATA_SIZE)
 
@@ -28,13 +31,11 @@ class Rages():
             self.rages.append(rage)
 
     def start_random_rages(self):
-        import random
-
         self.init_data.clear_all()
         possible_rages = [x for x in range(self.RAGE_COUNT) if x != self.PUGS_RAGE_ID]
 
-        number_initial_rages = random.randint(self.args.start_rages_random_min, self.args.start_rages_random_max)
-        initial_rages = random.sample(possible_rages, number_initial_rages)
+        number_initial_rages = self.random.randint(self.args.start_rages_random_min, self.args.start_rages_random_max)
+        initial_rages = self.random.sample(possible_rages, number_initial_rages)
         for rage_id in initial_rages:
             self.init_data[rage_id] = 1
 

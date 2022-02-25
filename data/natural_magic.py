@@ -20,7 +20,7 @@ class NaturalMagic:
         self.args = args
         self.characters = characters
         self.spells = spells
-        self.random: Random = get_random_instance(args.character_seed)
+        self.random: Random = get_random_instance(f"{args.subseed_command}-natural-magic")
 
         self.terra_spell_data = DataArray(self.rom, self.TERRA_SPELL_DATA_START, self.TERRA_SPELL_DATA_END, self.SPELL_DATA_SIZE)
         self.celes_spell_data = DataArray(self.rom, self.CELES_SPELL_DATA_START, self.CELES_SPELL_DATA_END, self.SPELL_DATA_SIZE)
@@ -156,7 +156,7 @@ class NaturalMagic:
             exclude.append(self.spells.get_id("Life 2"))
             exclude.append(self.spells.get_id("Life 3"))
 
-        random_spells = self.spells.get_random(count = len(self.terra_spells), exclude = exclude)
+        random_spells = self.spells.get_random(count = len(self.terra_spells), exclude = exclude, random_instance = self.random)
         for index, spell in enumerate(random_spells):
             self.terra_spells[index].spell = spell
 
@@ -169,7 +169,7 @@ class NaturalMagic:
             exclude.append(self.spells.get_id("Life 2"))
             exclude.append(self.spells.get_id("Life 3"))
 
-        random_spells = self.spells.get_random(count = len(self.celes_spells), exclude = exclude)
+        random_spells = self.spells.get_random(count = len(self.celes_spells), exclude = exclude, random_instance = self.random)
         for index, spell in enumerate(random_spells):
             self.celes_spells[index].spell = spell
 

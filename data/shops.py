@@ -11,7 +11,7 @@ class Shops():
         self.rom = rom
         self.args = args
         self.items = items
-        self.random = get_random_instance(args.shop_seed)
+        self.random = get_random_instance(f"{args.subseed_shop}-shop")
 
         self.shop_data = DataArray(self.rom, self.DATA_START, self.DATA_END, self.DATA_SIZE)
 
@@ -88,14 +88,14 @@ class Shops():
             if exclude is None:
                 exclude = []
 
-            random_tier = weighted_random(weights[item_type])
+            random_tier = weighted_random(weights[item_type], random_instance = self.random)
             possible_items = [item_id for item_id in tiers[item_type][random_tier] if item_id not in exclude]
             while not possible_items:
                 # no more items left in chosen tier, pick a different one
                 weights[item_type][random_tier] = 0
                 assert(any(weights[item_type])) # ensure tier left which has not been tried
 
-                random_tier = weighted_random(weights[item_type])
+                random_tier = weighted_random(weights[item_type], random_instance = self.random)
                 possible_items = [item_id for item_id in tiers[item_type][random_tier] if item_id not in exclude]
 
             random_item_index = self.random.randrange(len(possible_items))
@@ -112,6 +112,7 @@ class Shops():
                 random_item_id = get_item(item_type, items_added + exclude)
                 shop.items[item_index] = random_item_id
                 items_added.append(random_item_id)
+        print('random tiered')
 
     def shuffle_random(self):
         self.shuffle()
@@ -132,12 +133,13 @@ class Shops():
             for item_index in range(shop.item_count):
                 if total_index == sorted_random_indices[-1]:
                     item_type = self.items.get_type(shop.items[item_index])
-                    shop.items[item_index] = self.items.get_random(shop.items.copy(), item_type, seed = self.args.shop_seed)
+                    shop.items[item_index] = self.items.get_random(shop.items.copy(), item_type, random_instance = self.random)
 
                     sorted_random_indices.pop()
                     if not sorted_random_indices:
                         return
                 total_index += 1
+        print('shuffle random')
 
     def clear_inventories(self):
         for shop in self.shops:

@@ -10,7 +10,7 @@ class Arguments:
             "starting_gold_items", "items", "shops", "chests",
             "graphics",
             "coliseum", "auction_house", "challenges", "bug_fixes", "misc",
-            "seed"
+            "subseed"
         ]
         self.group_modules = {}
         for group in self.groups:

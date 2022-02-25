@@ -48,6 +48,10 @@ class Result(ObjectiveResult):
     NAME = "MagPwr Random"
     def __init__(self, min_count, max_count):
         from constants.entities import id_character, CHARACTER_COUNT
+        import args
+        from seed import get_random_instance
+        random = get_random_instance(f"{args.subseed_check}--condition-{self.NAME}")
+
         character = random.randint(0, CHARACTER_COUNT - 1)
         character_name = id_character[character]
 

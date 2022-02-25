@@ -47,6 +47,10 @@ class Battle(battle_result.Result):
 class Result(ObjectiveResult):
     NAME = "Stamina Random"
     def __init__(self, min_count, max_count):
+        import args
+        from seed import get_random_instance
+        random = get_random_instance(f"{args.subseed_check}--condition-{self.NAME}")
+
         from constants.entities import id_character, CHARACTER_COUNT
         character = random.randint(0, CHARACTER_COUNT - 1)
         character_name = id_character[character]

@@ -6,7 +6,7 @@ class Commands:
     def __init__(self, characters, args):
         self.characters = characters
         self.args = args
-        self.random = get_random_instance(self.args.character_seed)
+        self.random = get_random_instance(f"{self.args.subseed_command}-commands")
 
     def mod_commands(self):
         command_set = set(name_id[name] for name in RANDOM_POSSIBLE_COMMANDS)

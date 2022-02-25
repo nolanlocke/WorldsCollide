@@ -4,6 +4,7 @@ from data.structures import DataBits, DataArray
 
 from memory.space import Bank, Reserve, Allocate, Write
 import instruction.asm as asm
+from seed import get_random_instance
 
 class Lores:
     LORE_COUNT = 24
@@ -27,6 +28,8 @@ class Lores:
         self.init_data = DataBits(self.rom, self.INITIAL_LORES_START, self.INITIAL_LORES_END)
         self.name_data = DataArray(self.rom, self.NAMES_START, self.NAMES_END, self.NAME_SIZE)
         self.ability_data = DataArray(self.rom, self.ABILITY_DATA_START, self.ABILITY_DATA_END, AbilityData.DATA_SIZE)
+
+        self.random = get_random_instance(f"{args.subseed_command}-lores")
 
         self.lores = []
         for lore_index in range(len(self.ability_data)):
@@ -128,12 +131,11 @@ class Lores:
         )
 
     def start_random_lores(self):
-        import random
 
         self.init_data.clear_all()
 
-        number_initial_lores = random.randint(self.args.start_lores_random_min, self.args.start_lores_random_max)
-        initial_lores = random.sample(range(self.LORE_COUNT), number_initial_lores)
+        number_initial_lores = self.random.randint(self.args.start_lores_random_min, self.args.start_lores_random_max)
+        initial_lores = self.random.sample(range(self.LORE_COUNT), number_initial_lores)
         for lore_id in initial_lores:
             self.init_data[lore_id] = 1
 
@@ -142,20 +144,17 @@ class Lores:
         for lore in self.lores:
             mp.append(lore.mp)
 
-        import random
-        random.shuffle(mp)
+        self.random.shuffle(mp)
         for lore in self.lores:
             lore.mp = mp.pop()
 
     def random_mp_value(self):
-        import random
         for lore in self.lores:
-            lore.mp = random.randint(self.args.lores_mp_random_value_min, self.args.lores_mp_random_value_max)
+            lore.mp = self.random.randint(self.args.lores_mp_random_value_min, self.args.lores_mp_random_value_max)
 
     def random_mp_percent(self):
-        import random
         for lore in self.lores:
-            mp_percent = random.randint(self.args.lores_mp_random_percent_min,
+            mp_percent = self.random.randint(self.args.lores_mp_random_percent_min,
                                         self.args.lores_mp_random_percent_max) / 100.0
             value = int(lore.mp * mp_percent)
             lore.mp = max(min(value, 255), 0)

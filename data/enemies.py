@@ -34,7 +34,7 @@ class Enemies():
         self.enemy_name_data = DataArray(self.rom, self.NAMES_START, self.NAMES_END, self.NAME_SIZE)
         self.enemy_item_data = DataArray(self.rom, self.ITEMS_START, self.ITEMS_END, self.ITEMS_SIZE)
 
-        self.random = get_random_instance(args.enemy_seed)
+        self.random = get_random_instance(f"{args.subseed_normal}-enemies")
 
         self.enemies = []
         self.bosses = []
@@ -59,9 +59,9 @@ class Enemies():
     def __len__(self):
         return len(self.enemies)
 
-    def get_random(self):
-        random_enemy = self.random.choice(self.enemies[:255])
-        print(random_enemy.name)
+    def get_random(self, random_instance = None):
+        random = self.random if random_instance is None else random_instance
+        random_enemy = random.choice(self.enemies[:255])
         return random_enemy.id
 
     def get_enemy(self, name):

@@ -1,5 +1,8 @@
 SEED_LENGTH = 12
 
+instances = {}
+
+
 def generate_seed():
     import secrets, string
     alpha_digits = string.ascii_lowercase + string.digits
@@ -14,7 +17,11 @@ def seed_rng(seed = None, flags = ""):
     return seed
 
 def get_random_instance(seed):
-    from random import Random
-    instance = Random()
-    instance.seed(seed)
-    return instance
+    if instances.get(seed):
+        return instances[seed]
+    else:
+        from random import Random
+        instance = Random()
+        instance.seed(seed)
+        instances[seed] = instance
+        return instance

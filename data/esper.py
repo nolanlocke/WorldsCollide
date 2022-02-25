@@ -8,6 +8,11 @@ class Esper(AbilityData):
     HP_10_PERCENT, HP_30_PERCENT, HP_50_PERCENT, MP_10_PERCENT, MP_30_PERCENT, MP_50_PERCENT, HP_100_PERCENT,\
     LVL_30_PERCENT, LVL_50_PERCENT, STRENGTH_1, STRENGTH_2, SPEED_1, SPEED_2, STAMINA_1, STAMINA_2, MAGIC_1, MAGIC_2 = range(17)
 
+    BONUSES = [HP_10_PERCENT, HP_30_PERCENT, HP_50_PERCENT, MP_10_PERCENT,
+                MP_30_PERCENT, MP_50_PERCENT, HP_100_PERCENT, STRENGTH_1, STRENGTH_2,
+                SPEED_1, SPEED_2, STAMINA_1, STAMINA_2, MAGIC_1, MAGIC_2]
+
+
     LEARN_RATES = [1, 2, 3, 4, 5, 6, 7, 8, 10, 15, 16, 20]
 
     SPELL_COUNT = 5
@@ -109,18 +114,8 @@ class Esper(AbilityData):
 
         self.bonus = bonus
 
-    def randomize_rates(self):
-        import random
-        for spell_index in range(self.spell_count):
-            self.spells[spell_index].rate = random.choice(self.LEARN_RATES)
-
-    def randomize_bonus(self):
-        import random
-        # exclude lvl percent bonuses
-        possible = [self.HP_10_PERCENT, self.HP_30_PERCENT, self.HP_50_PERCENT, self.MP_10_PERCENT,
-                    self.MP_30_PERCENT, self.MP_50_PERCENT, self.HP_100_PERCENT, self.STRENGTH_1, self.STRENGTH_2,
-                    self.SPEED_1, self.SPEED_2, self.STAMINA_1, self.STAMINA_2, self.MAGIC_1, self.MAGIC_2]
-        self.set_bonus(random.choice(possible))
+    def set_rate(self, spell_index, rate):
+        self.spells[spell_index].rate = rate
 
     def get_equipable_characters(self):
         from data.characters import Characters

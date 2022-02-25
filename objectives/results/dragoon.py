@@ -20,7 +20,9 @@ class Battle(battle_result.Result):
 class Result(ObjectiveResult):
     NAME = "Dragoon"
     def __init__(self):
-        import random
+        import args
+        from seed import get_random_instance
+        random = get_random_instance(f"{args.subseed_check}--condition-{self.NAME}")
         lances = ["Partisan", "Pearl Lance", "Aura Lance"]
         lance = random.choice(lances)
 

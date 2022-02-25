@@ -1,3 +1,6 @@
+from seed import get_random_instance
+
+
 class Shop():
     SHOP_TYPE_COUNT = 6
     EMPTY, WEAPON, ARMOR, ITEM, RELIC, VENDOR = range(SHOP_TYPE_COUNT)
@@ -84,18 +87,6 @@ class Shop():
         for item_index in range(self.ITEM_CAPACITY):
             self.items[item_index] = self.NO_ITEM
         self.item_count = 0
-
-    # This doesn't seem to be referenced anywhere in the code.. May have been referenced by Shops in the past?
-    def randomize(self, items):
-        # does not change the number of items in the shop or the types of each item
-        items_added = []
-        for item_index in range(self.item_count):
-            item_type = items.get_type(self.items[item_index])
-
-            # add a random item to the shop that has not already been added
-            random_item_id = items.get_random(items_added.copy(), item_type)
-            self.items[item_index] = random_item_id
-            items_added.append(random_item_id)
 
     def name(self):
         from data.shop_map_names import shop_map_names

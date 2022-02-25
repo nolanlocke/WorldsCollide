@@ -1,7 +1,9 @@
+import args
 from objectives.results._objective_result import *
 
 def _random_dance_table():
     from constants.dances import id_dance
+    random = get_random_instance(f"{args.subseed_check}--learn_dances")
 
     dance_table = [2 ** index for index in range(len(id_dance))]
     random.shuffle(dance_table)

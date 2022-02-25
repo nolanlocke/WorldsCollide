@@ -1,7 +1,9 @@
+import args
 from objectives.results._objective_result import *
 
 def _random_blitz_table():
     from constants.blitzes import id_blitz
+    random = get_random_instance(f"{args.subseed_check}--learn_blitzes")
 
     blitz_table = [2 ** index for index in range(len(id_blitz))]
     random.shuffle(blitz_table)
@@ -92,5 +94,9 @@ class Battle(battle_result.Result):
 class Result(ObjectiveResult):
     NAME = "Learn Blitzes"
     def __init__(self, min_count, max_count):
+        import args
+        from seed import get_random_instance
+        random = get_random_instance(f"{args.subseed_check}--condition-{self.NAME}")
+
         self.count = random.randint(min_count, max_count)
         super().__init__(Field, Battle, self.count)

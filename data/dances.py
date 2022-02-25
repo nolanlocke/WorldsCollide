@@ -3,6 +3,7 @@ from data.structures import DataArray
 
 from memory.space import Bank, Reserve, Allocate, Write, Read
 import instruction.asm as asm
+from seed import get_random_instance
 
 class Dances:
     DANCE_COUNT = 8
@@ -25,6 +26,8 @@ class Dances:
 
         self.data = DataArray(self.rom, self.DATA_START, self.DATA_END, self.DATA_SIZE)
         self.name_data = DataArray(self.rom, self.NAMES_START, self.NAMES_END, self.NAME_SIZE)
+
+        self.random = get_random_instance(f"{args.subseed_command}-dances")
 
         self.dances = []
         for dance_index in range(len(self.data)):
@@ -141,10 +144,9 @@ class Dances:
         )
 
     def start_random_dances(self):
-        import random
 
-        number_initial_dances = random.randint(self.args.start_dances_random_min, self.args.start_dances_random_max)
-        initial_dances = random.sample(range(self.DANCE_COUNT), number_initial_dances)
+        number_initial_dances = self.random.randint(self.args.start_dances_random_min, self.args.start_dances_random_max)
+        initial_dances = self.random.sample(range(self.DANCE_COUNT), number_initial_dances)
 
         dance_bits = 0
         for dance_index in initial_dances:
@@ -156,8 +158,7 @@ class Dances:
         for dance in self.dances:
             abilities.extend(dance.dances)
 
-        import random
-        random.shuffle(abilities)
+        self.random.shuffle(abilities)
 
         for dance_index, dance in enumerate(self.dances):
             ability_index = dance_index * self.DATA_SIZE

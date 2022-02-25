@@ -21,7 +21,8 @@ class EnemyFormations():
         self.rom = rom
         self.args = args
         self.enemies = enemies
-        self.random = get_random_instance(args.enemy_seed)
+        self.normal_random = get_random_instance(f"{args.subseed_normal}-normal-formations")
+        self.boss_random = get_random_instance(f"{args.subseed_boss}-boss-formations")
 
         self.flags_data = DataArray(self.rom, self.FLAGS_START, self.FLAGS_END, self.FLAGS_SIZE)
         self.enemies_data = DataArray(self.rom, self.ENEMIES_START, self.ENEMIES_END, self.ENEMIES_SIZE)
@@ -88,19 +89,20 @@ class EnemyFormations():
         return False
 
     def get_random_normal(self):
-
-        return self.random.choice(self.normal)
+        return self.normal_random.choice(self.normal)
 
     def get_random_boss(self, exclude = None):
         if exclude is None:
-            return self.random.choice(self.bosses)
+            return self.boss_random.choice(self.bosses)
 
         possible_bosses = [boss_id for boss_id in self.bosses if boss_id not in exclude]
-        return self.random.choice(possible_bosses)
+        choice = self.boss_random.choice(possible_bosses)
+        print(choice)
+        return choice
 
     def get_random_dragon(self):
 
-        return self.random.choice(self.dragons)
+        return self.boss_random.choice(self.dragons)
 
     def set_chadarnook_position_left_screen(self):
         self.formations[456].enemy_x_positions[0] = 1 # painting

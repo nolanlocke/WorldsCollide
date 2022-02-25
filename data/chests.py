@@ -13,7 +13,7 @@ class Chests():
         self.rom = rom
         self.args = args
         self.items = items
-        self.random = get_random_instance(args.chest_seed)
+        self.random = get_random_instance(f"{args.subseed_chest}-chests")
 
         self.chest_data = DataArrays(self.rom, self.PTRS_START, self.PTRS_END, self.rom.SHORT_PTR_SIZE, self.DATA_START, self.DATA_END, self.DATA_SIZE)
 
@@ -79,13 +79,13 @@ class Chests():
             from data.chest_item_tiers import tiers, weights, tier_s_distribution
             from utils.weighted_random import weighted_random
 
-            random_tier = weighted_random(weights)
+            random_tier = weighted_random(weights, random_instance = self.random)
             if random_tier < len(weights) - 1: # not s tier, use equal distribution
                 random_tier_index = self.random.randrange(len(tiers[random_tier]))
                 return tiers[random_tier][random_tier_index]
 
             weights = [entry[1] for entry in tier_s_distribution]
-            random_s_index = weighted_random(weights)
+            random_s_index = weighted_random(weights, random_instance = self.random)
             return tier_s_distribution[random_s_index][0]
 
         # first shuffle the chests to mix up empty/item/gold positions
@@ -116,7 +116,7 @@ class Chests():
             if chest.type == Chest.GOLD:
                 chest.randomize_gold()
             elif chest.type == Chest.ITEM:
-                chest.contents = self.items.get_random(seed = self.args.chest_seed)
+                chest.contents = self.items.get_random(random_instance = self.random)
 
     def clear_contents(self):
         for chest in self.chests:

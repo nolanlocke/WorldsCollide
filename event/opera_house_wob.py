@@ -161,10 +161,9 @@ class OperaHouseWOB(Event):
         )
 
         if self.args.event_timers_random:
-            import random
 
             # randomize timer between 4 and 7 minutes
-            seconds = random.randint(240, 420)
+            seconds = self.random.randint(240, 420)
 
             space = Reserve(0xaba03, 0xaba04, "opera house timer")
             space.write(
@@ -298,7 +297,7 @@ class OperaHouseWOB(Event):
         space.write(
             field.Call(show_celes),
         )
-       
+
         # do not animate the now hidden party leader
         space = Reserve(0xac28a, 0xac28d, "opera house do not turn party leader up", field.NOP())
         space = Reserve(0xac30d, 0xac312, "opera house do not move party leader up", field.NOP())

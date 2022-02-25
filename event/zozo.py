@@ -157,7 +157,7 @@ class Zozo(Event):
         )
 
     def randomize_clock_mod(self):
-        import random, copy
+        import copy
         from collections import namedtuple
 
         # original clues:
@@ -178,6 +178,8 @@ class Zozo(Event):
             12 : "twelve",
         }
 
+        self.random = get_random_instance(f"{self.args.subseed_check}--zozo-clock")
+
         class Option:
             def __init__(self, name, values, format_string):
                 self.name = name
@@ -197,7 +199,7 @@ class Zozo(Event):
         solution_indices = []
         solution_values = []
         for option in options:
-            solution_index = random.randint(0, len(option.values) - 1)
+            solution_index = self.random.randint(0, len(option.values) - 1)
             solution_indices.append(solution_index)
             solution_values.append(option.values[solution_index])
 
@@ -224,7 +226,7 @@ class Zozo(Event):
             )
 
         # first clue gives either the hour, minute, or second
-        digit_index = random.randint(0, len(options) - 1)
+        digit_index = self.random.randint(0, len(options) - 1)
         solution_value = solution_values[digit_index]
         self.dialogs.set_text(1058, (f"That clock has no {options[digit_index].name} hand."
                                       " It's never pointing to the right time anyway!<end>"))
@@ -234,7 +236,7 @@ class Zozo(Event):
         del options[digit_index]
 
         # second clue removes half (or half - 1) of the possibilities from one of the two remaining digits
-        digit_index = random.randint(0, len(options) - 1)
+        digit_index = self.random.randint(0, len(options) - 1)
         if options[digit_index].name == "hour":
             divisor = 4
         else:
@@ -264,8 +266,8 @@ class Zozo(Event):
                 # if more clues than options, allow multiple clues for same value
                 options = copy.deepcopy(single_clue_options)
 
-            digit_index = random.randint(0, len(options) - 1)
-            value_index = random.randint(0, len(options[digit_index].values) - 1)
+            digit_index = self.random.randint(0, len(options) - 1)
+            value_index = self.random.randint(0, len(options[digit_index].values) - 1)
 
             digit = options[digit_index].name
             value = options[digit_index].values[value_index]

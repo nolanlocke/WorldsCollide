@@ -2,6 +2,7 @@ from data.spell import Spell
 from data.spell_names import id_name, name_id
 from data.ability_data import AbilityData
 from data.structures import DataArray
+from seed import get_random_instance
 
 class Spells:
     BLACK_MAGIC_COUNT = 24
@@ -41,11 +42,11 @@ class Spells:
             return ""
         return self.spells[id].get_name()
 
-    def get_random(self, count = 1, exclude = None):
+    def get_random(self, count = 1, exclude = None, random_instance = None):
         if exclude is None:
             exclude = []
 
-        import random
+        random = random_instance if random_instance is not None else get_random_instance(f"{self.args.subseed_command}-spells")
         possible_spell_ids = [spell.id for spell in self.spells if spell.id not in exclude]
         return random.sample(possible_spell_ids, count)
 
