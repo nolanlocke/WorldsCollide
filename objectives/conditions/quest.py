@@ -17,3 +17,5 @@ class Condition(ObjectiveCondition):
     def name(self):
         return quest_bit[self.quest].name
 
+    def quest_name(self):
+        return self.name()
